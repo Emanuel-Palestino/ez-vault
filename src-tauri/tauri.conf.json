@@ -12,9 +12,9 @@
   "app": {
     "windows": [
       {
-        "title": "ez-vault",
-        "width": 800,
-        "height": 600
+        "title": "ezVault",
+        "width": 933,
+        "height": 700
       }
     ],
     "security": {

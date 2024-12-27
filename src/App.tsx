@@ -8,10 +8,11 @@ export function App() {
       <button
         onClick={() => {
           saveCredential({
-            url: "https://example.com",
             username: "john.doe",
             password: "password",
-            note: "This is a note",
+            app_id: "1234567890",
+            created_at_ts: 1234567890,
+            updated_at_ts: 1234567890,
           })
         }}
       >
@@ -23,7 +24,10 @@ export function App() {
           saveSecret({
             key: "API_KEY",
             value: "1234567890",
-            note: "This is a note",
+            description: "This is a note",
+            app_id: "1234567890",
+            created_at_ts: 1234567890,
+            updated_at_ts: 1234567890,
           })
         }}
       >

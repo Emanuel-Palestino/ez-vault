@@ -3,7 +3,7 @@ import { saveCredential, saveSecret } from './services/storage'
 export function App() {
   return (
     <main>
-      <h1>ezVault</h1>
+      <h1 className="w-full text-center text-2xl font-semibold">ezVault</h1>
 
       <button
         onClick={() => {

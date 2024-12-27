@@ -1,47 +1,46 @@
 export type BaseType = {
   created_at_ts: number
   updated_at_ts: number
+  description?: string
 }
 
 export type Environment = BaseType & {
   id: string
   name: string
-  description?: string
 }
 
 export type App = BaseType & {
   id: string
-  parent_app_id?: string
-  environment_id: string
+  url: string // js URL type
+  environments_ids: string[]
   name: string
-  description?: string
-  url: string
+  labels: string[]
+  bounded_context?: string
 }
 
 export type Port = BaseType & {
   id: string
   app_id: string
-  name: string
-  description?: string
-  port: number
+  value: number
 }
 
 export type Credential = BaseType & {
+  id: string
   app_id: string
   username: string
   password: string
 }
 
 export type Secret = BaseType & {
+  id: string
   app_id: string
   key: string
   value: string
-  description?: string
 }
 
 export type Token = BaseType & {
+  id: string
   app_id: string
   name: string
-  description?: string
-  token: string
+  value: string
 }

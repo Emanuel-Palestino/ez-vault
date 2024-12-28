@@ -20,7 +20,7 @@
 }
 
 .fieldset-legend {
-  @apply py-1;
+  @apply py-1 pb-0.5;
 }
 
 .input,

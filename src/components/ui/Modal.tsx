@@ -9,9 +9,7 @@ export const Modal = forwardRef<HTMLDialogElement, ModalProps>(
     return (
       <dialog ref={ref} className="modal">
         <div className="modal-box">
-          <article className='prose prose-headings:mt-0'>
-            {children}
-          </article>
+          <article className="prose prose-headings:mt-0">{children}</article>
         </div>
         <form method="dialog" className="modal-backdrop">
           <button>close</button>

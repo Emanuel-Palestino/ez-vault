@@ -1,19 +1,19 @@
-import { invoke } from "@tauri-apps/api/core";
-import { Credential, Secret } from "../types/storage";
+import { invoke } from '@tauri-apps/api/core'
+import { Credential, Secret } from '../types/entities'
 
-export async function saveCredential(credential: Credential) {
-  await invoke("save_credential", { 
-    url: credential.url,
+export async function saveCredential(credential: Omit<Credential, 'id'>) {
+  await invoke('save_credential', {
+    url: 'http://localhost:3000',
     username: credential.username,
     password: credential.password,
-    note: credential.note,
-   });
+    note: 'description',
+  })
 }
 
-export async function saveSecret(secret: Secret) {
-  await invoke("save_secret", {
+export async function saveSecret(secret: Omit<Secret, 'id'>) {
+  await invoke('save_secret', {
     key: secret.key,
     value: secret.value,
-    note: secret.note,
-  });
+    note: secret.description,
+  })
 }

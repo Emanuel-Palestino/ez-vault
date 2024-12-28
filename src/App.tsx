@@ -1,34 +1,15 @@
-import { saveCredential, saveSecret } from "./services/storage";
+import { Toolbar } from './components/Toolbar'
+import { CreateAppModal } from './components/CreateAppModal'
+import { useModal } from './components/ui/Modal'
 
 export function App() {
+  const { modalRef, open, close } = useModal()
+
   return (
-    <main>
-      <h1>ezVault</h1>
+    <main className="p-2 prose prose-headings:mt-0">
+      <Toolbar openCreateApp={open} />
 
-      <button
-        onClick={() => {
-          saveCredential({
-            url: "https://example.com",
-            username: "john.doe",
-            password: "password",
-            note: "This is a note",
-          })
-        }}
-      >
-        Save Credential
-      </button>
-
-      <button
-        onClick={() => {
-          saveSecret({
-            key: "API_KEY",
-            value: "1234567890",
-            note: "This is a note",
-          })
-        }}
-      >
-        Save Secret
-      </button>
+      <CreateAppModal closeModal={close} modalRef={modalRef} />
     </main>
-  );
+  )
 }

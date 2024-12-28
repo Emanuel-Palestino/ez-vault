@@ -1,0 +1,29 @@
+@import 'tailwindcss';
+
+@plugin '@tailwindcss/typography';
+
+@plugin "daisyui" {
+  themes:
+    light --default,
+    dark --prefersdark;
+}
+
+@plugin "daisyui/theme" {
+  name: 'light';
+  default: true;
+  --depth: 0;
+  --radius-selector: 1rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.21875rem;
+}
+
+.fieldset-legend {
+  @apply py-1 pb-0.5;
+}
+
+.input,
+.textarea {
+  @apply w-full;
+}

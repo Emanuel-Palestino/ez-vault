@@ -6,7 +6,7 @@ export function App() {
   const { modalRef, open, close } = useModal()
 
   return (
-    <main className="p-2 prose prose-headings:mt-0">
+    <main className="w-full p-2">
       <Toolbar openCreateApp={open} />
 
       <CreateAppModal closeModal={close} modalRef={modalRef} />

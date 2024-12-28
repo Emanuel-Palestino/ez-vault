@@ -6,11 +6,13 @@ interface ToolbarProps {
 
 export const Toolbar: FC<ToolbarProps> = ({ openCreateApp }) => {
   return (
-    <section className="menu menu-horizontal bg-base-200 rounded-box absolute right-2 top-2">
-      <button className="btn">Settings</button>
-      <button className="btn" onClick={openCreateApp}>
-        New
-      </button>
-    </section>
+    <nav className='w-full flex justify-end sticky top-2 z-50'>
+      <section className="menu menu-horizontal bg-base-200 rounded-box">
+        <button className="btn">Settings</button>
+        <button className="btn" onClick={openCreateApp}>
+          New
+        </button>
+      </section>
+    </nav>
   )
 }

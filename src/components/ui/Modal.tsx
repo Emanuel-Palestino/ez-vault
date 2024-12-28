@@ -8,7 +8,11 @@ export const Modal = forwardRef<HTMLDialogElement, ModalProps>(
   ({ children }, ref) => {
     return (
       <dialog ref={ref} className="modal">
-        <div className="modal-box">{children}</div>
+        <div className="modal-box">
+          <article className='prose prose-headings:mt-0'>
+            {children}
+          </article>
+        </div>
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
         </form>

@@ -37,10 +37,3 @@ export type Secret = BaseType & {
   key: string
   value: string
 }
-
-export type Token = BaseType & {
-  id: string
-  app_id: string
-  name: string
-  value: string
-}

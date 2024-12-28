@@ -27,6 +27,9 @@ importers:
         specifier: 4.0.0-beta.8
         version: 4.0.0-beta.8
     devDependencies:
+      '@tailwindcss/typography':
+        specifier: ^0.5.15
+        version: 0.5.15(tailwindcss@4.0.0-beta.8)
       '@tauri-apps/cli':
         specifier: ^2
         version: 2.1.0
@@ -39,6 +42,9 @@ importers:
       '@vitejs/plugin-react':
         specifier: ^4.3.4
         version: 4.3.4(vite@6.0.5(jiti@2.4.2)(lightningcss@1.28.2))
+      daisyui:
+        specifier: 5.0.0-alpha.58
+        version: 5.0.0-alpha.58
       prettier:
         specifier: 3.4.2
         version: 3.4.2
@@ -464,6 +470,11 @@ packages:
     resolution: {integrity: sha512-fpZkAwKDFuRNbxQZrXViij2D38R6qqgAnctBR9NPyHxZqYDjn3uyk75alrDnSGj4wUCTAhOCEX4HCI9xCgKGdA==}
     engines: {node: '>= 10'}
 
+  '@tailwindcss/typography@0.5.15':
+    resolution: {integrity: sha512-AqhlCXl+8grUz8uqExv5OTtgpjuVIwFTSXTrh8y9/pw6q2ek7fJ+Y8ZEVw7EB2DCcuCOtEjf9w3+J3rzts01uA==}
+    peerDependencies:
+      tailwindcss: '>=3.0.0 || insiders || >=4.0.0-alpha.20'
+
   '@tailwindcss/vite@4.0.0-beta.8':
     resolution: {integrity: sha512-ZNlj0fdeH4/uWXafrXklZY+TgmN7wOHWHHBL4i3xzD4BflcCDZJkgJER/8baJCpagMzwWDnA6CyXDX+2q7lMRQ==}
     peerDependencies:
@@ -583,8 +594,16 @@ packages:
   convert-source-map@2.0.0:
     resolution: {integrity: sha512-Kvp459HrV2FEJ1CAsi1Ku+MY3kasH19TFykTz2xWmMeq6bk2NU3XXvfJ+Q61m0xktWwt+1HSYf3JZsTms3aRJg==}
 
+  cssesc@3.0.0:
+    resolution: {integrity: sha512-/Tb/JcjK111nNScGob5MNtsntNM1aCNUDipB/TkwZFhyDrrE47SOx/18wF2bbjgc3ZzCSKW1T5nt5EbFoAz/Vg==}
+    engines: {node: '>=4'}
+    hasBin: true
+
   csstype@3.1.3:
     resolution: {integrity: sha512-M1uQkMl8rQK/szD0LNhtqxIPLpimGm8sOBwU7lLnCpSbTyY3yeU1Vc7l4KT5zT4s/yOxHH5O7tIuuLOCnLADRw==}
+
+  daisyui@5.0.0-alpha.58:
+    resolution: {integrity: sha512-Ort973WlOMlSDgltV0RjZ28guzkCC7Muwzqh5mgYx5ITWqj0cT1OJjYnLRSAweCiWTMi/RCRHpH+HXXe0ZMg5A==}
 
   debug@4.4.0:
     resolution: {integrity: sha512-6WTZ/IxCY/T6BALoZHaE4ctp9xm+Z5kY/pzYaCHRFeyVhojxlrm+46y68HA6hr0TcwEssoxNiDEUJQjfPZ/RYA==}
@@ -713,6 +732,15 @@ packages:
     resolution: {integrity: sha512-ePLRrbt3fgjXI5VFZOLbvkLD5ZRuxGKm+wJ3ujCqBtL3NanDHPo/5zicR5uEKAPiIjBYF99BM4K4okvMznjkVA==}
     engines: {node: '>= 12.0.0'}
 
+  lodash.castarray@4.4.0:
+    resolution: {integrity: sha512-aVx8ztPv7/2ULbArGJ2Y42bG1mEQ5mGjpdvrbJcJFU3TbYybe+QlLS4pst9zV52ymy2in1KpFPiZnAOATxD4+Q==}
+
+  lodash.isplainobject@4.0.6:
+    resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
+
+  lodash.merge@4.6.2:
+    resolution: {integrity: sha512-0KpjqXRVvrYyCsX1swR/XTK0va6VQkQM6MNo7PqW77ByjAhoARA8EfrP1N4+KlKj8YS0ZUCtRT/YUuhyYDujIQ==}
+
   loose-envify@1.4.0:
     resolution: {integrity: sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==}
     hasBin: true
@@ -733,6 +761,10 @@ packages:
 
   picocolors@1.1.1:
     resolution: {integrity: sha512-xceH2snhtb5M9liqDsmEw56le376mTZkEX/jEb/RxNFyegNul7eNslCXP9FDj/Lcu0X8KEyMceP2ntpaHrDEVA==}
+
+  postcss-selector-parser@6.0.10:
+    resolution: {integrity: sha512-IQ7TZdoaqbT+LCpShg46jnZVlhWD2w6iQYAcYXfHARZ7X1t/UGhhceQDs5X0cGqKvYlHNOuv7Oa1xmb0oQuA3w==}
+    engines: {node: '>=4'}
 
   postcss@8.4.49:
     resolution: {integrity: sha512-OCVPnIObs4N29kxTjzLfUryOkvZEq+pf8jTF0lg8E7uETuWHA+v7j3c/xJmiqpX450191LlmZfUKkXxkTry7nA==}
@@ -789,6 +821,9 @@ packages:
     hasBin: true
     peerDependencies:
       browserslist: '>= 4.21.0'
+
+  util-deprecate@1.0.2:
+    resolution: {integrity: sha512-EPD5q1uXyFxJpCrLnCc1nHnq3gOa6DZBocAIiI2TaSCA7VCJ1UJDMagCzIkXNsUYfD1daK//LTEQ8xiIbrHtcw==}
 
   vite@6.0.5:
     resolution: {integrity: sha512-akD5IAH/ID5imgue2DYhzsEwCi0/4VKY31uhMLEYJwPP4TiUp8pL5PIK+Wo7H8qT8JY9i+pVfPydcFPYD1EL7g==}
@@ -1149,6 +1184,14 @@ snapshots:
       '@tailwindcss/oxide-win32-arm64-msvc': 4.0.0-beta.8
       '@tailwindcss/oxide-win32-x64-msvc': 4.0.0-beta.8
 
+  '@tailwindcss/typography@0.5.15(tailwindcss@4.0.0-beta.8)':
+    dependencies:
+      lodash.castarray: 4.4.0
+      lodash.isplainobject: 4.0.6
+      lodash.merge: 4.6.2
+      postcss-selector-parser: 6.0.10
+      tailwindcss: 4.0.0-beta.8
+
   '@tailwindcss/vite@4.0.0-beta.8(vite@6.0.5(jiti@2.4.2)(lightningcss@1.28.2))':
     dependencies:
       '@tailwindcss/node': 4.0.0-beta.8
@@ -1262,7 +1305,11 @@ snapshots:
 
   convert-source-map@2.0.0: {}
 
+  cssesc@3.0.0: {}
+
   csstype@3.1.3: {}
+
+  daisyui@5.0.0-alpha.58: {}
 
   debug@4.4.0:
     dependencies:
@@ -1368,6 +1415,12 @@ snapshots:
       lightningcss-win32-arm64-msvc: 1.28.2
       lightningcss-win32-x64-msvc: 1.28.2
 
+  lodash.castarray@4.4.0: {}
+
+  lodash.isplainobject@4.0.6: {}
+
+  lodash.merge@4.6.2: {}
+
   loose-envify@1.4.0:
     dependencies:
       js-tokens: 4.0.0
@@ -1383,6 +1436,11 @@ snapshots:
   node-releases@2.0.19: {}
 
   picocolors@1.1.1: {}
+
+  postcss-selector-parser@6.0.10:
+    dependencies:
+      cssesc: 3.0.0
+      util-deprecate: 1.0.2
 
   postcss@8.4.49:
     dependencies:
@@ -1448,6 +1506,8 @@ snapshots:
       browserslist: 4.24.3
       escalade: 3.2.0
       picocolors: 1.1.1
+
+  util-deprecate@1.0.2: {}
 
   vite@6.0.5(jiti@2.4.2)(lightningcss@1.28.2):
     dependencies:

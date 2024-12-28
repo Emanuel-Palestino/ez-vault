@@ -1,33 +1,32 @@
-import React, { forwardRef } from 'react'
+import { forwardRef, useRef } from 'react'
 
 interface ModalProps {
-  isOpen: boolean
-  onClose: () => void
   children: React.ReactNode
 }
 
 export const Modal = forwardRef<HTMLDialogElement, ModalProps>(
-  ({ isOpen, onClose, children }, ref) => {
+  ({ children }, ref) => {
     return (
-      <>
-        {isOpen && (
-          <div className="fixed inset-0 z-40 bg-black/50 flex items-center justify-center transition-opacity">
-            <dialog
-              ref={ref}
-              open={isOpen}
-              className="static bg-white rounded-lg p-6 shadow-lg w-full max-w-md transform transition-all duration-300 scale-100"
-            >
-              <button
-                className="absolute top-3 right-3 text-gray-500 hover:text-black cursor-pointer"
-                onClick={onClose}
-              >
-                ✖
-              </button>
-              {children}
-            </dialog>
-          </div>
-        )}
-      </>
+      <dialog ref={ref} className="modal">
+        <div className="modal-box">{children}</div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
     )
   },
 )
+
+export const useModal = () => {
+  const modalRef = useRef<HTMLDialogElement>(null)
+
+  const open = () => {
+    if (modalRef.current) modalRef.current.showModal()
+  }
+
+  const close = () => {
+    if (modalRef.current) modalRef.current.close()
+  }
+
+  return { modalRef, open, close }
+}

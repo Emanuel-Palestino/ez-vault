@@ -16,9 +16,14 @@ declare module 'react' {
 interface ToolbarProps {
   openCreateApp: () => void
   openCreateEnv: () => void
+  openCreateCredential: () => void
 }
 
-export const Toolbar: FC<ToolbarProps> = ({ openCreateApp, openCreateEnv }) => {
+export const Toolbar: FC<ToolbarProps> = ({
+  openCreateApp,
+  openCreateEnv,
+  openCreateCredential,
+}) => {
   return (
     <>
       <nav className="w-full flex justify-end sticky top-2 z-50">
@@ -50,7 +55,7 @@ export const Toolbar: FC<ToolbarProps> = ({ openCreateApp, openCreateEnv }) => {
           <a>Port</a>
         </li>
         <li>
-          <a>Credential</a>
+          <a onClick={openCreateCredential}>Credential</a>
         </li>
         <li>
           <a>Secret</a>

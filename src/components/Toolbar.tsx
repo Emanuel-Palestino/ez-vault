@@ -17,12 +17,14 @@ interface ToolbarProps {
   openCreateApp: () => void
   openCreateEnv: () => void
   openCreateCredential: () => void
+  openCreateSecret: () => void
 }
 
 export const Toolbar: FC<ToolbarProps> = ({
   openCreateApp,
   openCreateEnv,
   openCreateCredential,
+  openCreateSecret,
 }) => {
   return (
     <>
@@ -58,7 +60,7 @@ export const Toolbar: FC<ToolbarProps> = ({
           <a onClick={openCreateCredential}>Credential</a>
         </li>
         <li>
-          <a>Secret</a>
+          <a onClick={openCreateSecret}>Secret</a>
         </li>
       </ul>
     </>

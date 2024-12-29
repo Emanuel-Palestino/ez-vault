@@ -3,6 +3,7 @@ import { CreateAppModal } from './components/CreateAppModal'
 import { useModal } from './components/ui/Modal'
 import { CreateEnvModal } from './components/CreateEnvModal'
 import { CreateCredentialModal } from './components/CreateCredentialModal'
+import { CreateSecretModal } from './components/CreateSecretModal'
 
 export function App() {
   const {
@@ -23,12 +24,19 @@ export function App() {
     close: closeCreateCredentialModal,
   } = useModal()
 
+  const {
+    modalRef: createSecretModalRef,
+    open: openCreateSecretModal,
+    close: closeCreateSecretModal,
+  } = useModal()
+
   return (
     <main className="w-full p-2">
       <Toolbar
         openCreateApp={openCreateAppModal}
         openCreateEnv={openCreateEnvModal}
         openCreateCredential={openCreateCredentialModal}
+        openCreateSecret={openCreateSecretModal}
       />
 
       <CreateAppModal
@@ -44,6 +52,11 @@ export function App() {
       <CreateCredentialModal
         closeModal={closeCreateCredentialModal}
         modalRef={createCredentialModalRef}
+      />
+
+      <CreateSecretModal
+        closeModal={closeCreateSecretModal}
+        modalRef={createSecretModalRef}
       />
     </main>
   )

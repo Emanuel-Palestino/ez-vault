@@ -15,9 +15,10 @@ declare module 'react' {
 
 interface ToolbarProps {
   openCreateApp: () => void
+  openCreateEnv: () => void
 }
 
-export const Toolbar: FC<ToolbarProps> = ({ openCreateApp }) => {
+export const Toolbar: FC<ToolbarProps> = ({ openCreateApp, openCreateEnv }) => {
   return (
     <>
       <nav className="w-full flex justify-end sticky top-2 z-50">
@@ -40,7 +41,7 @@ export const Toolbar: FC<ToolbarProps> = ({ openCreateApp }) => {
         style={{ positionAnchor: '--anchor-new-menu' }}
       >
         <li>
-          <a>Environment</a>
+          <a onClick={openCreateEnv}>Environment</a>
         </li>
         <li>
           <a onClick={openCreateApp}>Application</a>

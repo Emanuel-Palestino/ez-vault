@@ -19,6 +19,19 @@
   --size-field: 0.21875rem;
 }
 
+@plugin "daisyui/theme" {
+  name: 'dark';
+  default: false;
+  prefersdark: true;
+  color-scheme: 'dark';
+  --depth: 0;
+  --radius-selector: 1rem;
+  --radius-field: 0.5rem;
+  --radius-box: 1rem;
+  --size-selector: 0.25rem;
+  --size-field: 0.21875rem;
+}
+
 .fieldset-legend {
   @apply py-1 pb-0.5;
 }

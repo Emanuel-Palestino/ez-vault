@@ -40,6 +40,16 @@ export const CreateEnvModal: FC<CreateEnvModalProps> = ({
             autoComplete="off"
           />
         </fieldset>
+
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">Description</legend>
+          <textarea
+            className="textarea"
+            name="env_description"
+            placeholder="Optional environment's description"
+            autoComplete="off"
+          ></textarea>
+        </fieldset>
       </form>
 
       <div className="flex gap-2 justify-end">

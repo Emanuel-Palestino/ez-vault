@@ -1,12 +1,12 @@
 import { FC, useRef } from 'react'
 import { Modal } from './ui/Modal'
 
-interface CreateCredentialModalProps {
+interface CreatePortModalProps {
   closeModal: () => void
   modalRef: React.RefObject<HTMLDialogElement>
 }
 
-export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
+export const CreatePortModal: FC<CreatePortModalProps> = ({
   closeModal,
   modalRef,
 }) => {
@@ -21,11 +21,11 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
 
   return (
     <Modal ref={modalRef}>
-      <h2>Create credential</h2>
+      <h2>Create port</h2>
 
       <form
         ref={formRef}
-        id="create-credential-form"
+        id="create-port-form"
         className="mb-4"
         onSubmit={handleSubmit}
       >
@@ -34,34 +34,23 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
           <input
             type="text"
             className="input validator"
-            name="credential_app_owner"
-            placeholder="Application owner of the credential"
+            name="port_app_owner"
+            placeholder="Application owner of the port"
             required
             autoComplete="off"
           />
         </fieldset>
 
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Username *</legend>
+          <legend className="fieldset-legend">Port *</legend>
           <input
-            type="text"
+            type="number"
             className="input validator"
-            name="credential_username"
-            placeholder="Username or email"
+            name="port_value"
+            placeholder="Port number"
             required
             autoComplete="off"
-          />
-        </fieldset>
-
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">Password *</legend>
-          <input
-            type="text"
-            className="input validator"
-            name="credential_password"
-            placeholder="Password"
-            required
-            autoComplete="off"
+            min={0}
           />
         </fieldset>
 
@@ -69,8 +58,8 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
           <legend className="fieldset-legend">Description</legend>
           <textarea
             className="textarea"
-            name="credential_description"
-            placeholder="Optional credential's description"
+            name="port_description"
+            placeholder="Optional port's description"
             autoComplete="off"
           ></textarea>
         </fieldset>
@@ -83,7 +72,7 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
 
         <button
           className="btn btn-success"
-          form="create-credential-form"
+          form="create-port-form"
           type="submit"
         >
           Create

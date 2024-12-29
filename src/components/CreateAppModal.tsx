@@ -36,8 +36,9 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
           <input
             type="text"
             className="input validator"
-            name="name"
+            name="app_name"
             placeholder="Application's name"
+            autoComplete="off"
             required
           />
         </fieldset>
@@ -47,8 +48,9 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
           <input
             type="url"
             className="input"
-            name="url"
+            name="app_url"
             placeholder="Application's url"
+            autoComplete="off"
           />
         </fieldset>
 
@@ -56,8 +58,9 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
           <legend className="fieldset-legend">Description</legend>
           <textarea
             className="textarea"
-            name="description"
+            name="app_description"
             placeholder="Optional application's description"
+            autoComplete="off"
           ></textarea>
         </fieldset>
 
@@ -78,8 +81,9 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
               <input
                 type="text"
                 className="input"
-                name="bounded_context"
+                name="app_bounded_context"
                 placeholder="Application's bounded context"
+                autoComplete="off"
               />
             </fieldset>
 
@@ -88,8 +92,9 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
               <input
                 type="text"
                 className="input"
-                name="environments"
+                name="app_environments"
                 placeholder="Application's environments"
+                autoComplete="off"
               />
             </fieldset>
 
@@ -100,6 +105,7 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
                 className="input"
                 name="labels"
                 placeholder="Application's labels"
+                autoComplete="off"
               />
             </fieldset>
           </section>

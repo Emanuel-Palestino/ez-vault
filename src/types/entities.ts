@@ -1,7 +1,7 @@
 export type BaseType = {
   created_at_ts: number
   updated_at_ts: number
-  description?: string
+  note?: string
 }
 
 export type Environment = BaseType & {

@@ -1,3 +1,4 @@
+import { invoke } from '@tauri-apps/api/core'
 import { FC } from 'react'
 
 // Extend the react CSSProperties interface to accept popover API and CSS anchor positioning
@@ -28,11 +29,16 @@ export const Toolbar: FC<ToolbarProps> = ({
   openCreateSecret,
   openCreatePort,
 }) => {
+
+  const testOnClick = async () => {
+    await invoke('hola')
+  }
+
   return (
     <>
       <nav className="w-full flex justify-end sticky top-2 z-50">
         <section className="menu menu-horizontal bg-base-200 rounded-box">
-          <button className="btn">Settings</button>
+          <button className="btn" onClick={testOnClick}>Settings</button>
           <button
             className="btn"
             popovertarget="new-menu"

@@ -1,6 +1,12 @@
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Deserialize, Serialize)]
+#[derive(Debug, Clone, Deserialize)]
+pub struct NewEnvironment {
+  pub name: String,
+  pub note: Option<String>,
+}
+
+#[derive(Debug, Clone, Serialize)]
 pub struct Environment {
   pub id: String,
   pub name: String,

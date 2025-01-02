@@ -1,5 +1,6 @@
 import { FC, useRef } from 'react'
 import { Modal } from './ui/Modal'
+import { createEnvironment } from '../services/storage'
 
 interface CreateEnvModalProps {
   closeModal: () => void
@@ -12,8 +13,15 @@ export const CreateEnvModal: FC<CreateEnvModalProps> = ({
 }) => {
   const formRef = useRef<HTMLFormElement>(null)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    const formData = new FormData(formRef.current!)
+
+    await createEnvironment({
+      name: formData.get('env_name') as string,
+      note: formData.get('env_note') as string,
+    })
 
     formRef.current?.reset()
     closeModal()
@@ -42,11 +50,11 @@ export const CreateEnvModal: FC<CreateEnvModalProps> = ({
         </fieldset>
 
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Description</legend>
+          <legend className="fieldset-legend">Note</legend>
           <textarea
             className="textarea"
-            name="env_description"
-            placeholder="Optional environment's description"
+            name="env_note"
+            placeholder="Optional environment's note"
             autoComplete="off"
           ></textarea>
         </fieldset>

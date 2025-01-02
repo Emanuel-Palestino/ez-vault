@@ -31,7 +31,8 @@ export const Toolbar: FC<ToolbarProps> = ({
 }) => {
 
   const testOnClick = async () => {
-    await invoke('ez_vault_check')
+    const res = await invoke('ez_vault_get_environments')
+    console.log('environments', res)
   }
 
   return (

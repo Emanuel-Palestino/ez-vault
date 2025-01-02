@@ -1,17 +1,18 @@
 use crate::types::Environment;
+use super::interfaces::IStorage;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct InMemoryStorage {
     pub data: Vec<Environment>,
 }
 
-impl InMemoryStorage {
+impl IStorage for InMemoryStorage {
     fn store_environment(&mut self, environment: Environment) {
         println!("Storing environment: {:?}", environment);
         self.data.push(environment);
     }
 
-    /* fn get_environments(&self) -> Vec<Environment> {
+    fn get_environments(&self) -> Vec<Environment> {
         self.data.clone()
-    } */
+    }
 }

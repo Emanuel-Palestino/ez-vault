@@ -1,7 +1,14 @@
 mod storage_builder;
-pub use storage_builder::StorageBuilder;
+pub mod web_commands;
 
 mod app;
-pub use app::VaultApp;
+use app::VaultApp;
 
-pub mod commands;
+use tauri::Manager;
+pub fn main_setup(
+) -> impl Fn(&mut tauri::App) -> std::result::Result<(), Box<dyn std::error::Error>> {
+    |app| {
+        app.manage(VaultApp::new());
+        Ok(())
+    }
+}

@@ -11,8 +11,8 @@ pub struct Environment {
     pub id: String,
     pub name: String,
     pub note: Option<String>,
-    pub created_at_ts: u64,
-    pub updated_at_ts: u64,
+    pub created_at_ts: i64,
+    pub updated_at_ts: i64,
 }
 
 #[derive(Debug)]
@@ -24,8 +24,8 @@ struct App {
     pub environments: Vec<Environment>,
     pub labels: Vec<String>,
     pub bounded_context: String,
-    pub created_at_ts: u64,
-    pub updated_at_ts: u64,
+    pub created_at_ts: i64,
+    pub updated_at_ts: i64,
 }
 
 #[derive(Debug)]
@@ -34,8 +34,8 @@ struct Port {
     pub app: App,
     pub value: u16,
     pub note: Option<String>,
-    pub created_at_ts: u64,
-    pub updated_at_ts: u64,
+    pub created_at_ts: i64,
+    pub updated_at_ts: i64,
 }
 
 #[derive(Debug)]
@@ -45,8 +45,8 @@ struct Credential {
     pub username: String,
     pub password: String,
     pub note: Option<String>,
-    pub created_at_ts: u64,
-    pub updated_at_ts: u64,
+    pub created_at_ts: i64,
+    pub updated_at_ts: i64,
 }
 
 #[derive(Debug)]
@@ -56,6 +56,6 @@ struct Secret {
     pub key: String,
     pub value: String,
     pub note: Option<String>,
-    pub created_at_ts: u64,
-    pub updated_at_ts: u64,
+    pub created_at_ts: i64,
+    pub updated_at_ts: i64,
 }

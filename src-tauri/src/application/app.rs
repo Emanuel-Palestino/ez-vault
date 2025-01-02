@@ -1,10 +1,10 @@
 use super::storage_builder::StorageBuilder;
-use crate::services::InMemoryStorage;
+use crate::interfaces::IStorage;
 
 pub struct VaultApp {
     version: &'static str,
     // TODO: Make storage private and add getter
-    pub storage: InMemoryStorage,
+    pub storage: Box<dyn IStorage + Send>,
 }
 
 impl VaultApp {
@@ -13,7 +13,7 @@ impl VaultApp {
 
         VaultApp {
             version: "0.1.0",
-            storage,
+            storage: Box::new(storage),
         }
     }
 
@@ -24,4 +24,14 @@ impl VaultApp {
     /* pub fn get_storage(&self) -> &InMemoryStorage {
         &self.storage
     } */
+}
+
+use std::sync::Mutex;
+use tauri::Manager;
+pub fn main_tauri_setup(
+) -> impl Fn(&mut tauri::App) -> std::result::Result<(), Box<dyn std::error::Error>> {
+    |app| {
+        app.manage(Mutex::new(VaultApp::new()));
+        Ok(())
+    }
 }

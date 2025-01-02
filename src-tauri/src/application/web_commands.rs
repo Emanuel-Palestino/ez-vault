@@ -1,6 +1,9 @@
 use super::app::VaultApp;
+use crate::{
+    services::interfaces::IStorage,
+    types::{Environment, NewEnvironment},
+};
 use std::sync::Mutex;
-use crate::{services::interfaces::IStorage, types::{Environment, NewEnvironment}};
 
 #[tauri::command]
 pub fn ez_vault_check(state: tauri::State<VaultApp>) {
@@ -8,7 +11,10 @@ pub fn ez_vault_check(state: tauri::State<VaultApp>) {
 }
 
 #[tauri::command]
-pub fn ez_vault_create_environment(state: tauri::State<Mutex<VaultApp>>, environment: NewEnvironment) {
+pub fn ez_vault_create_environment(
+    state: tauri::State<Mutex<VaultApp>>,
+    environment: NewEnvironment,
+) {
     let mut vault_state = state.lock().unwrap();
     vault_state.storage.store_environment(environment);
 }

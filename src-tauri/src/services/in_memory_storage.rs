@@ -1,5 +1,5 @@
-use crate::types::{Environment, NewEnvironment};
 use super::interfaces::IStorage;
+use crate::types::{Environment, NewEnvironment};
 
 #[derive(Debug, Clone)]
 pub struct InMemoryStorage {

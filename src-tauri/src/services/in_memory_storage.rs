@@ -36,7 +36,7 @@ impl IStorage for InMemoryStorage {
             url: app.url,
             note: app.note,
             environments: app
-                .environments
+                .environment_ids
                 .iter()
                 .map(|env_id| {
                     self.environments

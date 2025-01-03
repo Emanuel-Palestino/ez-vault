@@ -1,3 +1,4 @@
+// IMPORTANT NOTE: If changes are made to this file you must to sync the changes with the typescript entities types
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Deserialize)]

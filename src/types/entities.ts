@@ -1,3 +1,5 @@
+// IMPORTANT NOTE: If changes are made to this file, you must to sync the changes with the rust types module
+
 export type BaseType = {
   created_at_ts: number
   updated_at_ts: number

@@ -16,7 +16,10 @@ export type Environment = BaseType & {
   name: string
 }
 
-export type NewApp = Omit<App, 'id' | 'created_at_ts' | 'updated_at_ts'>
+export type NewApp = Omit<
+  App,
+  'id' | 'created_at_ts' | 'updated_at_ts' | 'environments'
+> & { environment_ids: string[] }
 
 export type App = BaseType & {
   id: string

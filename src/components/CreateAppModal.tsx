@@ -1,5 +1,7 @@
-import { FC, useRef, useState } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Modal } from './ui/Modal'
+import { createApp, getEnvironments } from '../services/storage'
+import { Environment } from '../types/entities'
 
 interface CreateAppModalProps {
   closeModal: () => void
@@ -13,9 +15,27 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
   const formRef = useRef<HTMLFormElement>(null)
 
   const [extraOptions, setExtraOptions] = useState<boolean>(false)
+  const [environments, setEnvironments] = useState<Environment[]>([])
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    getEnvironments().then(setEnvironments)
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    const formData = new FormData(formRef.current!)
+
+    await createApp({
+      name: formData.get('app_name') as string,
+      url: formData.get('app_url') as string,
+      note: formData.get('app_note') as string,
+      bounded_context: (formData.get('app_bounded_context') as string) || '',
+      environment_ids: [
+        (formData.get('app_environments') as string) || environments[0].id,
+      ],
+      labels: [(formData.get('labels') as string) || ''],
+    })
 
     formRef.current?.reset()
     closeModal()
@@ -55,11 +75,11 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
         </fieldset>
 
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Description</legend>
+          <legend className="fieldset-legend">Note</legend>
           <textarea
             className="textarea"
-            name="app_description"
-            placeholder="Optional application's description"
+            name="app_note"
+            placeholder="Optional application's note"
             autoComplete="off"
           ></textarea>
         </fieldset>
@@ -89,13 +109,18 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
 
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Environments</legend>
-              <input
-                type="text"
-                className="input"
+              <select
+                defaultValue="Select an environment"
+                className="select"
                 name="app_environments"
-                placeholder="Application's environments"
-                autoComplete="off"
-              />
+              >
+                <option disabled={true}>Select an environment</option>
+                {environments.map((env) => (
+                  <option key={env.id} value={env.id}>
+                    {env.name}
+                  </option>
+                ))}
+              </select>
             </fieldset>
 
             <fieldset className="fieldset">

@@ -1,5 +1,7 @@
-import { FC, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Modal } from './ui/Modal'
+import { createSecret, getApps } from '../services/storage'
+import { App } from '../types/entities'
 
 interface CreateSecretModalProps {
   closeModal: () => void
@@ -10,10 +12,24 @@ export const CreateSecretModal: FC<CreateSecretModalProps> = ({
   closeModal,
   modalRef,
 }) => {
+  const [apps, setApps] = useState<App[]>([])
   const formRef = useRef<HTMLFormElement>(null)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    getApps().then(setApps)
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    const formData = new FormData(formRef.current!)
+
+    await createSecret({
+      app_id: formData.get('secret_app_id') as string,
+      key: formData.get('secret_key') as string,
+      value: formData.get('secret_value') as string,
+      note: formData.get('secret_note') as string,
+    })
 
     formRef.current?.reset()
     closeModal()
@@ -31,14 +47,19 @@ export const CreateSecretModal: FC<CreateSecretModalProps> = ({
       >
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Application *</legend>
-          <input
-            type="text"
-            className="input validator"
-            name="secret_app_owner"
-            placeholder="Application owner of the secret"
+          <select
+            defaultValue="Select an application"
+            className="select validator"
+            name="secret_app_id"
             required
-            autoComplete="off"
-          />
+          >
+            <option disabled={true}>Select an application</option>
+            {apps.map((app) => (
+              <option key={app.id} value={app.id}>
+                {app.name}
+              </option>
+            ))}
+          </select>
         </fieldset>
 
         <fieldset className="fieldset">
@@ -65,11 +86,11 @@ export const CreateSecretModal: FC<CreateSecretModalProps> = ({
         </fieldset>
 
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Description</legend>
+          <legend className="fieldset-legend">Note</legend>
           <textarea
             className="textarea"
-            name="secret_description"
-            placeholder="Optional secret's description"
+            name="secret_note"
+            placeholder="Optional secret's note"
             autoComplete="off"
           ></textarea>
         </fieldset>

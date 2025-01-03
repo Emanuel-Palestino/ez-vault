@@ -1,5 +1,7 @@
-import { FC, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Modal } from './ui/Modal'
+import { createPort, getApps } from '../services/storage'
+import { App } from '../types/entities'
 
 interface CreatePortModalProps {
   closeModal: () => void
@@ -10,10 +12,23 @@ export const CreatePortModal: FC<CreatePortModalProps> = ({
   closeModal,
   modalRef,
 }) => {
+  const [apps, setApps] = useState<App[]>([])
   const formRef = useRef<HTMLFormElement>(null)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    getApps().then(setApps)
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    const formData = new FormData(formRef.current!)
+
+    await createPort({
+      app_id: formData.get('port_app_id') as string,
+      value: parseInt(formData.get('port_value') as string),
+      note: formData.get('port_note') as string,
+    })
 
     formRef.current?.reset()
     closeModal()
@@ -31,14 +46,19 @@ export const CreatePortModal: FC<CreatePortModalProps> = ({
       >
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Application *</legend>
-          <input
-            type="text"
-            className="input validator"
-            name="port_app_owner"
-            placeholder="Application owner of the port"
+          <select
+            defaultValue="Select an application"
+            className="select validator"
+            name="port_app_id"
             required
-            autoComplete="off"
-          />
+          >
+            <option disabled={true}>Select an application</option>
+            {apps.map((app) => (
+              <option key={app.id} value={app.id}>
+                {app.name}
+              </option>
+            ))}
+          </select>
         </fieldset>
 
         <fieldset className="fieldset">
@@ -55,11 +75,11 @@ export const CreatePortModal: FC<CreatePortModalProps> = ({
         </fieldset>
 
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Description</legend>
+          <legend className="fieldset-legend">Note</legend>
           <textarea
             className="textarea"
-            name="port_description"
-            placeholder="Optional port's description"
+            name="port_note"
+            placeholder="Optional port's note"
             autoComplete="off"
           ></textarea>
         </fieldset>

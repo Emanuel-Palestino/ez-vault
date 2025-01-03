@@ -37,6 +37,7 @@
 }
 
 .input,
-.textarea {
+.textarea,
+.select {
   @apply w-full;
 }

@@ -1,5 +1,10 @@
-import { invoke } from '@tauri-apps/api/core'
 import { FC } from 'react'
+import {
+  getApps,
+  getCredentialsByAppId,
+  getEnvironments,
+  getPorts,
+} from '../services/storage'
 
 // Extend the react CSSProperties interface to accept popover API and CSS anchor positioning
 declare module 'react' {
@@ -30,8 +35,11 @@ export const Toolbar: FC<ToolbarProps> = ({
   openCreatePort,
 }) => {
   const testOnClick = async () => {
-    const res = await invoke('ez_vault_get_environments')
-    console.log('environments', res)
+    const environments = await getEnvironments()
+    const apps = await getApps()
+    const ports = await getPorts()
+
+    console.log({ environments, apps, ports })
   }
 
   return (

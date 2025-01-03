@@ -9,7 +9,9 @@ pub struct VaultApp {
 
 impl VaultApp {
     pub fn new() -> VaultApp {
-        let storage = StorageBuilder::new().build_in_memory_storage();
+        let storage = StorageBuilder::new()
+            .with_default_environment()
+            .build_in_memory_storage();
 
         VaultApp {
             version: "0.1.0",

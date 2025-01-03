@@ -1,5 +1,7 @@
-import { FC, useRef } from 'react'
+import { FC, useEffect, useRef, useState } from 'react'
 import { Modal } from './ui/Modal'
+import { createCredential, getApps } from '../services/storage'
+import { App } from '../types/entities'
 
 interface CreateCredentialModalProps {
   closeModal: () => void
@@ -10,10 +12,24 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
   closeModal,
   modalRef,
 }) => {
+  const [apps, setApps] = useState<App[]>([])
   const formRef = useRef<HTMLFormElement>(null)
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  useEffect(() => {
+    getApps().then(setApps)
+  }, [])
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    const formData = new FormData(formRef.current!)
+
+    await createCredential({
+      app_id: formData.get('credential_app_id') as string,
+      username: formData.get('credential_username') as string,
+      password: formData.get('credential_password') as string,
+      note: formData.get('credential_note') as string,
+    })
 
     formRef.current?.reset()
     closeModal()
@@ -31,14 +47,19 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
       >
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Application *</legend>
-          <input
-            type="text"
-            className="input validator"
-            name="credential_app_owner"
-            placeholder="Application owner of the credential"
+          <select
+            defaultValue="Select an application"
+            className="select validator"
+            name="credential_app_id"
             required
-            autoComplete="off"
-          />
+          >
+            <option disabled={true}>Select an application</option>
+            {apps.map((app) => (
+              <option key={app.id} value={app.id}>
+                {app.name}
+              </option>
+            ))}
+          </select>
         </fieldset>
 
         <fieldset className="fieldset">
@@ -66,11 +87,11 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
         </fieldset>
 
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Description</legend>
+          <legend className="fieldset-legend">Note</legend>
           <textarea
             className="textarea"
-            name="credential_description"
-            placeholder="Optional credential's description"
+            name="credential_note"
+            placeholder="Optional credential's note"
             autoComplete="off"
           ></textarea>
         </fieldset>

@@ -21,7 +21,7 @@ pub struct NewApp {
     pub name: String,
     pub url: String,
     pub note: String,
-    pub environments: Vec<String>,
+    pub environment_ids: Vec<String>,
     pub labels: Vec<String>,
     pub bounded_context: String,
 }

@@ -8,6 +8,12 @@ impl StorageBuilder {
     }
 
     pub fn build_in_memory_storage(self) -> InMemoryStorage {
-        InMemoryStorage { data: Vec::new() }
+        InMemoryStorage {
+            environments: Vec::new(),
+            apps: Vec::new(),
+            ports: Vec::new(),
+            credentials: Vec::new(),
+            secrets: Vec::new(),
+        }
     }
 }

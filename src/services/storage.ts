@@ -1,8 +1,7 @@
 import { invoke } from '@tauri-apps/api/core'
-import { Environment } from '../types/entities'
+import { Environment, NewEnvironment } from '../types/entities'
 
-
-export const createEnvironment = async (environment: Omit<Environment, 'id' | 'created_at_ts' | 'updated_at_ts'>) => {
+export const createEnvironment = async (environment: NewEnvironment) => {
   await invoke('ez_vault_create_environment', { environment })
 }
 

@@ -29,7 +29,6 @@ export const Toolbar: FC<ToolbarProps> = ({
   openCreateSecret,
   openCreatePort,
 }) => {
-
   const testOnClick = async () => {
     const res = await invoke('ez_vault_get_environments')
     console.log('environments', res)
@@ -39,7 +38,9 @@ export const Toolbar: FC<ToolbarProps> = ({
     <>
       <nav className="w-full flex justify-end sticky top-2 z-50">
         <section className="menu menu-horizontal bg-base-200 rounded-box">
-          <button className="btn" onClick={testOnClick}>Settings</button>
+          <button className="btn" onClick={testOnClick}>
+            Settings
+          </button>
           <button
             className="btn"
             popovertarget="new-menu"

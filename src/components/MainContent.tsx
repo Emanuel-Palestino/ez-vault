@@ -1,22 +1,19 @@
-import { useEffect, useState } from "react"
-import { App } from "../types/entities"
-import { getApps } from "../services/storage"
-import { useModal } from "./ui/Modal"
-import { AppDetails } from "./AppDetails"
+import { useState } from 'react'
+import { App } from '../types/entities'
+import { useModal } from './ui/Modal'
+import { AppDetails } from './AppDetails'
+import { useGetApps } from '../services/storage'
 
 export const MainContent = () => {
-  const [apps, setApps] = useState<App[]>([])
   const { modalRef, open, close } = useModal()
   const [selectedApp, setSelectedApp] = useState<App | null>(null)
+
+  const { apps } = useGetApps()
 
   const handleOpenDetails = (app: App) => {
     setSelectedApp(app)
     open()
   }
-
-  useEffect(() => {
-    getApps().then(setApps)
-  }, [])
 
   return (
     <>

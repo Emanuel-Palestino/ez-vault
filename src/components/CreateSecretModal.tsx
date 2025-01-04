@@ -1,7 +1,6 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useRef } from 'react'
 import { Modal } from './ui/Modal'
-import { createSecret, getApps } from '../services/storage'
-import { App } from '../types/entities'
+import { createSecret, useGetApps } from '../services/storage'
 
 interface CreateSecretModalProps {
   closeModal: () => void
@@ -12,12 +11,8 @@ export const CreateSecretModal: FC<CreateSecretModalProps> = ({
   closeModal,
   modalRef,
 }) => {
-  const [apps, setApps] = useState<App[]>([])
+  const { apps } = useGetApps()
   const formRef = useRef<HTMLFormElement>(null)
-
-  useEffect(() => {
-    getApps().then(setApps)
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()

@@ -10,21 +10,41 @@ import {
   Port,
   Secret,
 } from '../types/entities'
+import useSWR from 'swr'
+import { FETCHER, TAURI_CMD } from '../utils/constants'
 
 export const createEnvironment = async (environment: NewEnvironment) => {
   await invoke('command_create_environment', { environment })
 }
 
-export const getEnvironments = async () => {
-  return await invoke<Environment[]>('command_get_environments')
+export const useGetEnvironments = () => {
+  const { data, error, isLoading } = useSWR(
+    { cmd: TAURI_CMD.GET_ENVIRONMENTS },
+    FETCHER<Environment[]>,
+    { fallbackData: [] },
+  )
+  return {
+    environments: data,
+    isError: error,
+    isLoading: isLoading,
+  }
 }
 
 export const createApp = async (app: NewApp) => {
   await invoke('command_create_app', { app })
 }
 
-export const getApps = async () => {
-  return await invoke<App[]>('command_get_apps')
+export const useGetApps = () => {
+  const { data, error, isLoading } = useSWR(
+    { cmd: TAURI_CMD.GET_APPS },
+    FETCHER<App[]>,
+    { fallbackData: [] },
+  )
+  return {
+    apps: data,
+    isError: error,
+    isLoading: isLoading,
+  }
 }
 
 export const createPort = async (port: NewPort) => {

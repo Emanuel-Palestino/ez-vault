@@ -1,6 +1,6 @@
-import { FC } from "react"
-import { Modal } from "./ui/Modal"
-import { App } from "../types/entities"
+import { FC } from 'react'
+import { Modal } from './ui/Modal'
+import { App } from '../types/entities'
 
 interface AppDetailsProps {
   appDetailsRef: React.RefObject<HTMLDialogElement>
@@ -11,13 +11,10 @@ interface AppDetailsProps {
 export const AppDetails: FC<AppDetailsProps> = ({
   appDetailsRef,
   closeAppDetails,
-  app
+  app,
 }) => {
   return (
-    <Modal
-      ref={appDetailsRef}
-      defaultOpen={true}
-    >
+    <Modal ref={appDetailsRef} defaultOpen={true}>
       <h2>{app.name}</h2>
       <dl>
         <dt>Note</dt>
@@ -29,14 +26,18 @@ export const AppDetails: FC<AppDetailsProps> = ({
         <dt>Environments</dt>
         <dd>
           {app.environments.map((env) => (
-            <span key={env.id} className="badge badge-primary">{env.name}</span>
+            <span key={env.id} className="badge badge-primary">
+              {env.name}
+            </span>
           ))}
         </dd>
 
         <dt>Labels</dt>
         <dd>
           {app.labels.map((label) => (
-            <span key={label} className="badge badge-accent">{label}</span>
+            <span key={label} className="badge badge-accent">
+              {label}
+            </span>
           ))}
         </dd>
 

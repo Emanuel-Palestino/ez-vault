@@ -1,10 +1,13 @@
 import { invoke, InvokeArgs } from '@tauri-apps/api/core'
 
-export const FETCHER = <T>(args: {
+export type FetcherArgs = {
   cmd: TAURI_CMD
   args?: InvokeArgs
   //options?: InvokeOptions
-}) => invoke<T>(args.cmd, args.args)
+}
+
+export const FETCHER = <Data>(args: FetcherArgs) =>
+  invoke<Data>(args.cmd, args.args)
 
 export const TAURI_CMD = {
   GET_ENVIRONMENTS: 'command_get_environments',

@@ -4,6 +4,7 @@ import {
   Environment,
   NewApp,
   NewCredential,
+  Credential,
   NewEnvironment,
   NewPort,
   NewSecret,
@@ -11,7 +12,7 @@ import {
   Secret,
 } from '../types/entities'
 import useSWR from 'swr'
-import { FETCHER, TAURI_CMD } from '../utils/constants'
+import { FETCHER, FetcherArgs, TAURI_CMD } from '../utils/constants'
 
 export const createEnvironment = async (environment: NewEnvironment) => {
   await invoke('command_create_environment', { environment })
@@ -19,10 +20,11 @@ export const createEnvironment = async (environment: NewEnvironment) => {
 
 export const useGetEnvironments = () => {
   const { data, error, isLoading } = useSWR(
-    { cmd: TAURI_CMD.GET_ENVIRONMENTS },
+    { cmd: TAURI_CMD.GET_ENVIRONMENTS } satisfies FetcherArgs,
     FETCHER<Environment[]>,
     { fallbackData: [] },
   )
+
   return {
     environments: data,
     isError: error,
@@ -36,10 +38,11 @@ export const createApp = async (app: NewApp) => {
 
 export const useGetApps = () => {
   const { data, error, isLoading } = useSWR(
-    { cmd: TAURI_CMD.GET_APPS },
+    { cmd: TAURI_CMD.GET_APPS } satisfies FetcherArgs,
     FETCHER<App[]>,
     { fallbackData: [] },
   )
+
   return {
     apps: data,
     isError: error,
@@ -55,24 +58,61 @@ export const getPorts = async () => {
   return await invoke<Port[]>('command_get_ports')
 }
 
-export const getPortsByAppId = async (appId: string) => {
-  return await invoke<Port[]>('command_get_ports_by_app_id', { appId })
+export const useGetPortsByAppId = (appId: string) => {
+  const { data, error, isLoading } = useSWR(
+    {
+      cmd: TAURI_CMD.GET_PORTS_BY_APP_ID,
+      args: { appId },
+    } satisfies FetcherArgs,
+    FETCHER<Port[]>,
+    { fallbackData: [] },
+  )
+
+  return {
+    ports: data,
+    isError: error,
+    isLoading: isLoading,
+  }
 }
 
 export const createCredential = async (credential: NewCredential) => {
   await invoke('command_create_credential', { credential })
 }
 
-export const getCredentialsByAppId = async (appId: string) => {
-  return await invoke<Credential[]>('command_get_credentials_by_app_id', {
-    appId,
-  })
+export const useGetCredentialsByAppId = (appId: string) => {
+  const { data, error, isLoading } = useSWR(
+    {
+      cmd: TAURI_CMD.GET_CREDENTIALS_BY_APP_ID,
+      args: { appId },
+    } satisfies FetcherArgs,
+    FETCHER<Credential[]>,
+    { fallbackData: [] },
+  )
+
+  return {
+    credentials: data,
+    isError: error,
+    isLoading: isLoading,
+  }
 }
 
 export const createSecret = async (secret: NewSecret) => {
   await invoke('command_create_secret', { secret })
 }
 
-export const getSecretsByAppId = async (appId: string) => {
-  return await invoke<Secret[]>('command_get_secrets_by_app_id', { appId })
+export const useGetSecretsByAppId = (appId: string) => {
+  const { data, error, isLoading } = useSWR(
+    {
+      cmd: TAURI_CMD.GET_SECRETS_BY_APP_ID,
+      args: { appId },
+    } satisfies FetcherArgs,
+    FETCHER<Secret[]>,
+    { fallbackData: [] },
+  )
+
+  return {
+    secrets: data,
+    isError: error,
+    isLoading: isLoading,
+  }
 }

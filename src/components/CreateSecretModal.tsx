@@ -37,7 +37,7 @@ export const CreateSecretModal: FC<CreateSecretModalProps> = ({
       <form
         ref={formRef}
         id="create-secret-form"
-        className="mb-4"
+        className="mb-4 overflow-y-auto"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">
@@ -91,7 +91,7 @@ export const CreateSecretModal: FC<CreateSecretModalProps> = ({
         </fieldset>
       </form>
 
-      <div className="flex gap-2 justify-end">
+      <div className="modal-action">
         <button className="btn btn-error" onClick={closeModal}>
           Cancel
         </button>

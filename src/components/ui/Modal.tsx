@@ -3,16 +3,19 @@ import { forwardRef, useRef, useState } from 'react'
 interface ModalProps {
   children: React.ReactNode
   defaultOpen?: boolean
+  size?: 'lg'
 }
 
 export const Modal = forwardRef<HTMLDialogElement, ModalProps>(
-  ({ children, defaultOpen = false }, ref) => {
+  ({ children, defaultOpen = false, size }, ref) => {
     const [isOpen, setIsOpen] = useState(defaultOpen)
 
     return (
       <dialog ref={ref} className={`modal ${isOpen ? 'modal-open' : ''}`}>
-        <div className="modal-box">
-          <article className="prose prose-headings:mt-0">{children}</article>
+        <div
+          className={`modal-box max-w-[32rem] max-h-[calc(11/12*100%)] prose prose-headings:mt-0 flex flex-col ${size === 'lg' && 'max-w-[50rem]'}`}
+        >
+          {children}
         </div>
         <form
           method="dialog"

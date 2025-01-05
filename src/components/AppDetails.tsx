@@ -25,7 +25,7 @@ export const AppDetails: FC<AppDetailsProps> = ({
   return (
     <Modal ref={appDetailsRef} defaultOpen={true} size="lg">
       <h2>{app.name}</h2>
-      <section className="overflow-y-auto">
+      <section className="overflow-y-auto mt-5">
         <dl>
           <dt>Note</dt>
           <dd>{app.note}</dd>

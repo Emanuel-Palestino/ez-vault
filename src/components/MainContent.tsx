@@ -25,7 +25,7 @@ export const MainContent = () => {
               className="card basis-xs bg-base-200 shadow-sm cursor-pointer"
               onClick={() => handleOpenDetails(app)}
             >
-              <div className="card-body p-6 prose prose-headings:mt-0 prose-headings:mb-0">
+              <div className="card-body p-6">
                 <div className="flex gap-2">
                   <span className="badge badge-xs badge-primary">default</span>
                   <span className="badge badge-xs badge-accent">bc</span>

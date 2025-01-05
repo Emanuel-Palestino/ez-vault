@@ -43,7 +43,7 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
       <form
         ref={formRef}
         id="create-app-form"
-        className="mb-4 overflow-y-auto"
+        className="mt-5 overflow-y-auto"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">

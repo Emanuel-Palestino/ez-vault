@@ -36,7 +36,7 @@ export const CreatePortModal: FC<CreatePortModalProps> = ({
       <form
         ref={formRef}
         id="create-port-form"
-        className="mb-4 overflow-y-auto"
+        className="mt-5 overflow-y-auto"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">

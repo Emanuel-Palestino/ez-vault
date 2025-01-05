@@ -37,7 +37,7 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
       <form
         ref={formRef}
         id="create-credential-form"
-        className="mb-4 overflow-y-auto"
+        className="mt-5 overflow-y-auto"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">

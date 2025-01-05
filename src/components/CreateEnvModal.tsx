@@ -34,7 +34,7 @@ export const CreateEnvModal: FC<CreateEnvModalProps> = ({
       <form
         ref={formRef}
         id="create-env-form"
-        className="mb-4 overflow-y-auto"
+        className="mt-5 overflow-y-auto"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">

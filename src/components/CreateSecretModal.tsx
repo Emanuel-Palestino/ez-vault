@@ -37,7 +37,7 @@ export const CreateSecretModal: FC<CreateSecretModalProps> = ({
       <form
         ref={formRef}
         id="create-secret-form"
-        className="mb-4 overflow-y-auto"
+        className="mt-5 overflow-y-auto"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">

@@ -13,7 +13,7 @@ export const Modal = forwardRef<HTMLDialogElement, ModalProps>(
     return (
       <dialog ref={ref} className={`modal ${isOpen ? 'modal-open' : ''}`}>
         <div
-          className={`modal-box max-w-[32rem] max-h-[calc(11/12*100%)] flex flex-col ${size === 'lg' && 'max-w-[50rem]'}`}
+          className={`modal-box flex flex-col ${size === 'lg' && 'max-w-[50rem]'}`}
         >
           {children}
         </div>

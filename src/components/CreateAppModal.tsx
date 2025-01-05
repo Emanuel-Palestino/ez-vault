@@ -1,7 +1,6 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useRef, useState } from 'react'
 import { Modal } from './ui/Modal'
-import { createApp, getEnvironments } from '../services/storage'
-import { Environment } from '../types/entities'
+import { createApp, useGetEnvironments } from '../services/storage'
 
 interface CreateAppModalProps {
   closeModal: () => void
@@ -15,11 +14,7 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
   const formRef = useRef<HTMLFormElement>(null)
 
   const [extraOptions, setExtraOptions] = useState<boolean>(false)
-  const [environments, setEnvironments] = useState<Environment[]>([])
-
-  useEffect(() => {
-    getEnvironments().then(setEnvironments)
-  }, [])
+  const { environments } = useGetEnvironments()
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -48,7 +43,7 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
       <form
         ref={formRef}
         id="create-app-form"
-        className="mb-4"
+        className="mt-5 overflow-y-auto"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">
@@ -137,7 +132,7 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
         )}
       </form>
 
-      <div className="flex gap-2 justify-end">
+      <div className="modal-action">
         <button className="btn btn-error" onClick={closeModal}>
           Cancel
         </button>

@@ -34,7 +34,7 @@ export const CreateEnvModal: FC<CreateEnvModalProps> = ({
       <form
         ref={formRef}
         id="create-env-form"
-        className="mb-4"
+        className="mt-5 overflow-y-auto"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">
@@ -60,7 +60,7 @@ export const CreateEnvModal: FC<CreateEnvModalProps> = ({
         </fieldset>
       </form>
 
-      <div className="flex gap-2 justify-end">
+      <div className="modal-action">
         <button className="btn btn-error" onClick={closeModal}>
           Cancel
         </button>

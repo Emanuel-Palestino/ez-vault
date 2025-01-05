@@ -1,10 +1,4 @@
 import { FC } from 'react'
-import {
-  getApps,
-  getCredentialsByAppId,
-  getEnvironments,
-  getPorts,
-} from '../services/storage'
 
 // Extend the react CSSProperties interface to accept popover API and CSS anchor positioning
 declare module 'react' {
@@ -34,19 +28,11 @@ export const Toolbar: FC<ToolbarProps> = ({
   openCreateSecret,
   openCreatePort,
 }) => {
-  const testOnClick = async () => {
-    const environments = await getEnvironments()
-    const apps = await getApps()
-    const ports = await getPorts()
-
-    console.log({ environments, apps, ports })
-  }
-
   return (
     <>
       <nav className="w-full flex justify-end sticky top-2 z-50">
         <section className="menu menu-horizontal bg-base-200 rounded-box">
-          <button className="btn" onClick={testOnClick}>
+          <button className="btn">
             Settings
           </button>
           <button

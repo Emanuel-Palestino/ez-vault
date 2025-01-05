@@ -1,7 +1,5 @@
 @import 'tailwindcss';
 
-@plugin '@tailwindcss/typography';
-
 @plugin "daisyui" {
   themes:
     light --default,
@@ -40,4 +38,16 @@
 .textarea,
 .select {
   @apply w-full;
+}
+
+h2 {
+  @apply text-2xl font-bold;
+}
+
+h3 {
+  @apply text-xl font-bold;
+}
+
+.modal-box {
+  @apply max-h-[calc(11/12*100%)];
 }

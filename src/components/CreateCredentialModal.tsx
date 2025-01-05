@@ -1,7 +1,6 @@
-import { FC, useEffect, useRef, useState } from 'react'
+import { FC, useRef } from 'react'
 import { Modal } from './ui/Modal'
-import { createCredential, getApps } from '../services/storage'
-import { App } from '../types/entities'
+import { createCredential, useGetApps } from '../services/storage'
 
 interface CreateCredentialModalProps {
   closeModal: () => void
@@ -12,12 +11,8 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
   closeModal,
   modalRef,
 }) => {
-  const [apps, setApps] = useState<App[]>([])
+  const { apps } = useGetApps()
   const formRef = useRef<HTMLFormElement>(null)
-
-  useEffect(() => {
-    getApps().then(setApps)
-  }, [])
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -42,7 +37,7 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
       <form
         ref={formRef}
         id="create-credential-form"
-        className="mb-4"
+        className="mt-5 overflow-y-auto"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">
@@ -97,7 +92,7 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
         </fieldset>
       </form>
 
-      <div className="flex gap-2 justify-end">
+      <div className="modal-action">
         <button className="btn btn-error" onClick={closeModal}>
           Cancel
         </button>

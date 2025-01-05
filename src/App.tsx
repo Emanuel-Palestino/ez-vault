@@ -5,6 +5,7 @@ import { CreateEnvModal } from './components/CreateEnvModal'
 import { CreateCredentialModal } from './components/CreateCredentialModal'
 import { CreateSecretModal } from './components/CreateSecretModal'
 import { CreatePortModal } from './components/CreatePortModal'
+import { MainContent } from './components/MainContent'
 
 export function App() {
   const {
@@ -46,6 +47,8 @@ export function App() {
         openCreateSecret={openCreateSecretModal}
         openCreatePort={openCreatePortModal}
       />
+
+      <MainContent />
 
       <CreateAppModal
         closeModal={closeCreateAppModal}

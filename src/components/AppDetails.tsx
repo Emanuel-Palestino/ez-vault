@@ -25,75 +25,114 @@ export const AppDetails: FC<AppDetailsProps> = ({
   return (
     <Modal ref={appDetailsRef} defaultOpen={true} size="lg">
       <h2>{app.name}</h2>
+
       <section className="overflow-y-auto mt-5">
-        <dl>
-          <dt>Note</dt>
-          <dd>{app.note}</dd>
+        <div className="flex gap-4 items-center">
+          <h3>General Info</h3>
+          <button className="btn btn-ghost btn-sm">edit</button>
+        </div>
+        <dl className="grid grid-cols-3 gap-x-4 gap-y-2 mt-2 mb-6">
+          <div>
+            <dt className="text-sm text-gray-400">Note</dt>
+            <dd className="ml-2 mb-2">{app.note}</dd>
+          </div>
 
-          <dt>Link</dt>
-          <dd>{app.url}</dd>
+          <div>
+            <dt className="text-sm text-gray-400">Link</dt>
+            <dd className="ml-2 mb-2">{app.url}</dd>
+          </div>
 
-          <dt>Environments</dt>
-          <dd>
-            {app.environments.map((env) => (
-              <span key={env.id} className="badge badge-primary">
-                {env.name}
-              </span>
-            ))}
-          </dd>
+          <div>
+            <dt className="text-sm text-gray-400">Environments</dt>
+            <dd className="ml-2 mb-2">
+              {app.environments.map((env) => (
+                <span key={env.id} className="badge badge-primary">
+                  {env.name}
+                </span>
+              ))}
+            </dd>
+          </div>
 
-          <dt>Labels</dt>
-          <dd>
-            {app.labels.map((label) => (
-              <span key={label} className="badge badge-accent">
-                {label}
-              </span>
-            ))}
-          </dd>
+          <div>
+            <dt className="text-sm text-gray-400">Labels</dt>
+            <dd className="ml-2 mb-2">
+              {app.labels.map((label) => (
+                <span key={label} className="badge badge-accent">
+                  {label}
+                </span>
+              ))}
+            </dd>
+          </div>
 
-          <dt>Bounded Context</dt>
-          <dd>
-            {app.bounded_context && (
-              <span className="badge badge-accent">{app.bounded_context}</span>
-            )}
-          </dd>
+          <div>
+            <dt className="text-sm text-gray-400">Bounded Context</dt>
+            <dd className="ml-2 mb-2">
+              {app.bounded_context && (
+                <span className="badge badge-accent">
+                  {app.bounded_context}
+                </span>
+              )}
+            </dd>
+          </div>
         </dl>
 
-        <h3>Ports</h3>
-        <p>
+        <div className="flex gap-4 items-center">
+          <h3>Ports</h3>
+          <button className="btn btn-ghost btn-sm">edit</button>
+        </div>
+        <div className="mt-2 mb-6">
           {ports.map((port) => (
             <span key={port.id} className="badge badge-primary">
               {port.value}
             </span>
           ))}
-        </p>
+        </div>
 
-        <h3>Credentials</h3>
-        <dl>
+        <div className="flex gap-4 items-center">
+          <h3>Credentials</h3>
+          <button className="btn btn-ghost btn-sm">edit</button>
+        </div>
+        <dl className="mt-2 mb-6">
           {credentials.map((credential) => (
-            <div key={credential.id}>
-              <dt>Username</dt>
-              <dd>{credential.username}</dd>
+            <div className="grid grid-cols-4 mt-2" key={credential.id}>
+              <div>
+                <dt className="text-sm text-gray-400">Username</dt>
+                <dd className="ml-2 mb-2">{credential.username}</dd>
+              </div>
 
-              <dt>Password</dt>
-              <dd>{credential.password}</dd>
+              <div>
+                <dt className="text-sm text-gray-400">Password</dt>
+                <dd className="ml-2 mb-2">{credential.password}</dd>
+              </div>
+
+              <div className="col-span-2">
+                <dt className="text-sm text-gray-400">Note</dt>
+                <dd className="ml-2 mb-2">{credential.note}</dd>
+              </div>
             </div>
           ))}
         </dl>
 
-        <h3>Secrets</h3>
-        <dl>
+        <div className="flex gap-4 items-center">
+          <h3>Secrets</h3>
+          <button className="btn btn-ghost btn-sm">edit</button>
+        </div>
+        <dl className="mt-2">
           {secrets.map((secret) => (
             <div key={secret.id}>
-              <dt>Key</dt>
-              <dd>{secret.key}</dd>
+              <dt className="text-sm text-gray-400">Key</dt>
+              <dd className="ml-2 mb-2">{secret.key}</dd>
 
-              <dt>Value</dt>
-              <dd>{secret.value}</dd>
+              <dt className="text-sm text-gray-400">Value</dt>
+              <dd className="ml-2 mb-2">{secret.value}</dd>
+
+              <dt className="text-sm text-gray-400">Note</dt>
+              <dd className="ml-2 mb-2">{secret.note}</dd>
             </div>
           ))}
         </dl>
       </section>
+
       <div className="modal-action">
         <button className="btn btn-warning" onClick={closeAppDetails}>
           Close

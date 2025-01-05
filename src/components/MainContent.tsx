@@ -27,8 +27,21 @@ export const MainContent = () => {
             >
               <div className="card-body p-6">
                 <div className="flex gap-2">
-                  <span className="badge badge-xs badge-primary">default</span>
-                  <span className="badge badge-xs badge-accent">bc</span>
+                  {app.environments.map((env) => (
+                    <span key={env.id} className="badge badge-xs badge-primary">
+                      {env.name}
+                    </span>
+                  ))}
+                  {app.labels.map((label) => (
+                    <span key={label} className="badge badge-xs badge-accent">
+                      {label}
+                    </span>
+                  ))}
+                  {app.bounded_context && (
+                    <span className="badge badge-xs badge-accent">
+                      {app.bounded_context}
+                    </span>
+                  )}
                 </div>
                 <h2>{app.name}</h2>
                 <p>{app.note}</p>

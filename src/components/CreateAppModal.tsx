@@ -25,11 +25,11 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
       name: formData.get('app_name') as string,
       url: formData.get('app_url') as string,
       note: formData.get('app_note') as string,
-      bounded_context: (formData.get('app_bounded_context') as string) || '',
+      bounded_context: formData.get('app_bounded_context') as string,
       environment_ids: [
         (formData.get('app_environments') as string) || environments[0].id,
       ],
-      labels: [(formData.get('labels') as string) || ''],
+      labels: formData.get('labels') ? [formData.get('labels') as string] : [],
     })
 
     formRef.current?.reset()

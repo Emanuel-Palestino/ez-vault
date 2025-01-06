@@ -11,11 +11,12 @@ import {
   Port,
   Secret,
 } from '../types/entities'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import { FETCHER, FetcherArgs, TAURI_CMD } from '../utils/constants'
 
 export const createEnvironment = async (environment: NewEnvironment) => {
-  await invoke('command_create_environment', { environment })
+  await invoke(TAURI_CMD.CREATE_ENVIRONMENT, { environment })
+  await mutate({ cmd: TAURI_CMD.GET_ENVIRONMENTS } satisfies FetcherArgs)
 }
 
 export const useGetEnvironments = () => {
@@ -33,7 +34,8 @@ export const useGetEnvironments = () => {
 }
 
 export const createApp = async (app: NewApp) => {
-  await invoke('command_create_app', { app })
+  await invoke(TAURI_CMD.CREATE_APP, { app })
+  await mutate({ cmd: TAURI_CMD.GET_APPS } satisfies FetcherArgs)
 }
 
 export const useGetApps = () => {
@@ -51,7 +53,8 @@ export const useGetApps = () => {
 }
 
 export const createPort = async (port: NewPort) => {
-  await invoke('command_create_port', { port })
+  await invoke(TAURI_CMD.CREATE_PORT, { port })
+  await mutate({ cmd: TAURI_CMD.GET_PORTS } satisfies FetcherArgs)
 }
 
 export const getPorts = async () => {
@@ -76,7 +79,11 @@ export const useGetPortsByAppId = (appId: string) => {
 }
 
 export const createCredential = async (credential: NewCredential) => {
-  await invoke('command_create_credential', { credential })
+  await invoke(TAURI_CMD.CREATE_CREDENTIAL, { credential })
+  await mutate({
+    cmd: TAURI_CMD.GET_CREDENTIALS_BY_APP_ID,
+    args: { appId: credential.app_id },
+  } satisfies FetcherArgs)
 }
 
 export const useGetCredentialsByAppId = (appId: string) => {
@@ -97,7 +104,11 @@ export const useGetCredentialsByAppId = (appId: string) => {
 }
 
 export const createSecret = async (secret: NewSecret) => {
-  await invoke('command_create_secret', { secret })
+  await invoke(TAURI_CMD.CREATE_SECRET, { secret })
+  await mutate({
+    cmd: TAURI_CMD.GET_SECRETS_BY_APP_ID,
+    args: { appId: secret.app_id },
+  } satisfies FetcherArgs)
 }
 
 export const useGetSecretsByAppId = (appId: string) => {

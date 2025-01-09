@@ -1,13 +1,19 @@
-use crate::{interfaces::IStorage, services::InMemoryStorage, types::NewEnvironment};
+use std::error;
+
+use libsql::Builder;
+
+use crate::{interfaces::IStorage, services::{InMemoryStorage, TursoStorage}, types::NewEnvironment};
 
 pub struct StorageBuilder {
     default_environment: Option<NewEnvironment>,
+    database_url: Option<String>,
 }
 
 impl StorageBuilder {
     pub fn new() -> StorageBuilder {
         StorageBuilder {
             default_environment: None,
+            database_url: None,
         }
     }
 
@@ -17,6 +23,7 @@ impl StorageBuilder {
                 name: "default".to_string(),
                 note: "Default environment".to_string(),
             }),
+            ..self
         }
     }
 
@@ -34,5 +41,22 @@ impl StorageBuilder {
         }
 
         storage
+    }
+
+    pub fn with_database_url(self, database_url: String) -> StorageBuilder {
+        StorageBuilder {
+            database_url: Some(database_url),
+            ..self
+        }
+    }
+
+    pub async fn build_turso_storage(self) -> TursoStorage {
+        let url = self.database_url.ok_or_else(error::Error("aa"))?;
+        let db = Builder::new_local(url).build().await?;
+        let conn = db.connect()?;
+        TursoStorage {
+            db,
+            conn,
+        }
     }
 }

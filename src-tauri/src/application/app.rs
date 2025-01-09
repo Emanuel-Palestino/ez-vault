@@ -11,7 +11,8 @@ impl VaultApp {
     pub fn new() -> VaultApp {
         let storage = StorageBuilder::new()
             .with_default_environment()
-            .build_in_memory_storage();
+            .with_database_url("lala.db".to_string())
+            .build_turso_storage();
 
         VaultApp {
             version: "0.1.0",

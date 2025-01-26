@@ -50,13 +50,14 @@ impl StorageBuilder {
         }
     }
 
-    pub async fn build_turso_storage(self) -> TursoStorage {
-        let url = self.database_url.ok_or_else(error::Error("aa"))?;
+    pub async fn build_turso_storage(self) -> Result<TursoStorage, Box<dyn error::Error>> {
+        let url = self.database_url.ok_or("Database URL not set")?;
+
         let db = Builder::new_local(url).build().await?;
         let conn = db.connect()?;
-        TursoStorage {
-            db,
+
+        Ok(TursoStorage {
             conn,
-        }
+        })
     }
 }

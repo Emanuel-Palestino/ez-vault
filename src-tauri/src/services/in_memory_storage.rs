@@ -53,7 +53,7 @@ impl IStorage for InMemoryStorage {
         });
     }
 
-    fn get_apps(&self) -> Vec<App> {
+    async fn get_apps(&self) -> Vec<App> {
         self.apps.clone()
     }
 

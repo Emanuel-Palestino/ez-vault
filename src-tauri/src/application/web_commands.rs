@@ -1,5 +1,6 @@
 use super::app::VaultApp;
-use crate::types::*;
+use crate::{interfaces::IStorage, types::*};
+use tauri::async_runtime::Mutex as AsyncMutex;
 use std::sync::Mutex;
 
 #[tauri::command]
@@ -31,10 +32,10 @@ pub fn command_create_app(state: tauri::State<Mutex<VaultApp>>, app: NewApp) {
 }
 
 #[tauri::command]
-pub fn command_get_apps(state: tauri::State<Mutex<VaultApp>>) -> Vec<App> {
-    let vault_state = state.lock().unwrap();
-    let apps = vault_state.storage.get_apps();
-    apps.into()
+pub async fn command_get_apps(state: tauri::State<'_, AsyncMutex<VaultApp>>) -> Result<Vec<App>, ()> {
+    let vault_state = state.lock().await;
+    let apps = vault_state.storage.get_apps().await;
+    Ok(apps.into())
 }
 
 #[tauri::command]

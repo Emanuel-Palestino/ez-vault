@@ -6,7 +6,6 @@ pub struct TursoStorage {
 }
 
 impl IStorage for TursoStorage {
-
     /* async fn test(&self) -> Result<(), Box<dyn error::Error>> {
         println!("TursoStorage test");
         let mut rows = self.conn.query("SELECT * FROM environments", ()).await?;
@@ -19,6 +18,90 @@ impl IStorage for TursoStorage {
 
         Ok(())
     } */
+
+    async fn init(&self) -> Result<(), Box<dyn std::error::Error>> {
+        println!("TursoStorage init");
+
+        self.conn
+            .execute_batch(
+                r#"
+                -- Tabla de Entornos (Environments)
+                CREATE TABLE IF NOT EXISTS environments (
+                    id TEXT PRIMARY KEY,
+                    name TEXT NOT NULL,
+                    created_at_ts INTEGER NOT NULL,
+                    updated_at_ts INTEGER NOT NULL,
+                    note TEXT
+                );
+
+                -- Tabla de Aplicaciones (Apps)
+                CREATE TABLE IF NOT EXISTS apps (
+                    id TEXT PRIMARY KEY,
+                    url TEXT NOT NULL,
+                    name TEXT NOT NULL,
+                    bounded_context TEXT NOT NULL,
+                    created_at_ts INTEGER NOT NULL,
+                    updated_at_ts INTEGER NOT NULL,
+                    note TEXT
+                );
+
+                -- Tabla intermedia para la relación muchos a muchos entre apps y environments
+                CREATE TABLE IF NOT EXISTS app_environments (
+                    app_id TEXT NOT NULL,
+                    environment_id TEXT NOT NULL,
+                    FOREIGN KEY (app_id) REFERENCES apps (id) ON DELETE CASCADE,
+                    FOREIGN KEY (environment_id) REFERENCES environments (id) ON DELETE CASCADE,
+                    PRIMARY KEY (app_id, environment_id)
+                );
+
+                -- Tabla de etiquetas (labels) para las aplicaciones (App tiene un array de labels)
+                CREATE TABLE IF NOT EXISTS app_labels (
+                    app_id TEXT NOT NULL,
+                    label TEXT NOT NULL,
+                    FOREIGN KEY (app_id) REFERENCES apps (id) ON DELETE CASCADE,
+                    PRIMARY KEY (app_id, label)
+                );
+
+                -- Tabla de Puertos (Ports)
+                CREATE TABLE IF NOT EXISTS ports (
+                    id TEXT PRIMARY KEY,
+                    app_id TEXT NOT NULL,
+                    value INTEGER NOT NULL,
+                    created_at_ts INTEGER NOT NULL,
+                    updated_at_ts INTEGER NOT NULL,
+                    note TEXT,
+                    FOREIGN KEY (app_id) REFERENCES apps (id) ON DELETE CASCADE
+                );
+
+                -- Tabla de Credenciales (Credentials)
+                CREATE TABLE IF NOT EXISTS credentials (
+                    id TEXT PRIMARY KEY,
+                    app_id TEXT NOT NULL,
+                    username TEXT NOT NULL,
+                    password TEXT NOT NULL,
+                    created_at_ts INTEGER NOT NULL,
+                    updated_at_ts INTEGER NOT NULL,
+                    note TEXT,
+                    FOREIGN KEY (app_id) REFERENCES apps (id) ON DELETE CASCADE
+                );
+
+                -- Tabla de Secretos (Secrets)
+                CREATE TABLE IF NOT EXISTS secrets (
+                    id TEXT PRIMARY KEY,
+                    app_id TEXT NOT NULL,
+                    key TEXT NOT NULL,
+                    value TEXT NOT NULL,
+                    created_at_ts INTEGER NOT NULL,
+                    updated_at_ts INTEGER NOT NULL,
+                    note TEXT,
+                    FOREIGN KEY (app_id) REFERENCES apps (id) ON DELETE CASCADE
+                );
+            "#,
+            )
+            .await?;
+
+        Ok(())
+    }
 
     fn store_environment(&mut self, environment: NewEnvironment) {
         todo!()

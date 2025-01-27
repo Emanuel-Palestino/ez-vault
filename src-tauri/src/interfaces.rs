@@ -1,6 +1,8 @@
 use crate::types::*;
 
 pub trait IStorage {
+    async fn init(&self) -> Result<(), Box<dyn std::error::Error>>;
+
     fn store_environment(&mut self, environment: NewEnvironment);
     fn get_environments(&self) -> Vec<Environment>;
 

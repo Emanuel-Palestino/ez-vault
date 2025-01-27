@@ -13,6 +13,11 @@ pub struct InMemoryStorage {
 }
 
 impl IStorage for InMemoryStorage {
+    async fn init(&self) -> Result<(), Box<dyn std::error::Error>> {
+        println!("InMemoryStorage init");
+        Ok(())
+    }
+
     fn store_environment(&mut self, environment: NewEnvironment) {
         let now = Utc::now().timestamp();
         self.environments.push(Environment {

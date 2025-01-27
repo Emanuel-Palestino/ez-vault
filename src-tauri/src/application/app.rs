@@ -1,4 +1,5 @@
 use super::storage_builder::StorageBuilder;
+use crate::interfaces::IStorage;
 use crate::services::TursoStorage;
 
 pub struct VaultApp {
@@ -14,6 +15,8 @@ impl VaultApp {
             .with_database_url("test.db".to_string())
             .build_turso_storage()
             .await?;
+
+        storage.init().await?;
 
         Ok(VaultApp {
             version: "0.1.0",

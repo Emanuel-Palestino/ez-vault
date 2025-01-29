@@ -18,7 +18,7 @@ impl IStorage for InMemoryStorage {
         Ok(())
     }
 
-    fn store_environment(&mut self, environment: NewEnvironment) {
+    async fn store_environment(&mut self, environment: NewEnvironment) {
         let now = Utc::now().timestamp();
         self.environments.push(Environment {
             id: Uuid::new_v4().to_string(),
@@ -29,7 +29,7 @@ impl IStorage for InMemoryStorage {
         });
     }
 
-    fn get_environments(&self) -> Vec<Environment> {
+    async fn get_environments(&self) -> Vec<Environment> {
         self.environments.clone()
     }
 

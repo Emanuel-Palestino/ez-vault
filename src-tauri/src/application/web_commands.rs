@@ -10,19 +10,20 @@ pub fn command_check(state: tauri::State<Mutex<VaultApp>>) {
 }
 
 #[tauri::command]
-pub fn command_create_environment(
-    state: tauri::State<Mutex<VaultApp>>,
+pub async fn command_create_environment(
+    state: tauri::State<'_, AsyncMutex<VaultApp>>,
     environment: NewEnvironment,
-) {
-    let mut vault_state = state.lock().unwrap();
-    vault_state.storage.store_environment(environment);
+) -> Result<(), ()> {
+    let mut vault_state = state.lock().await;
+    vault_state.storage.store_environment(environment).await;
+    Ok(())
 }
 
 #[tauri::command]
-pub fn command_get_environments(state: tauri::State<Mutex<VaultApp>>) -> Vec<Environment> {
-    let vault_state = state.lock().unwrap();
-    let environments = vault_state.storage.get_environments();
-    environments.into()
+pub async fn command_get_environments(state: tauri::State<'_, AsyncMutex<VaultApp>>) -> Result<Vec<Environment>, ()> {
+    let vault_state = state.lock().await;
+    let environments = vault_state.storage.get_environments().await;
+    Ok(environments.into())
 }
 
 #[tauri::command]

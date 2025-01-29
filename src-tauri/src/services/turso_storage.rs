@@ -29,9 +29,9 @@ impl IStorage for TursoStorage {
                 CREATE TABLE IF NOT EXISTS environments (
                     id TEXT PRIMARY KEY,
                     name TEXT NOT NULL,
+                    note TEXT,
                     created_at_ts INTEGER NOT NULL,
-                    updated_at_ts INTEGER NOT NULL,
-                    note TEXT
+                    updated_at_ts INTEGER NOT NULL
                 );
 
                 -- Tabla de Aplicaciones (Apps)
@@ -39,10 +39,10 @@ impl IStorage for TursoStorage {
                     id TEXT PRIMARY KEY,
                     url TEXT NOT NULL,
                     name TEXT NOT NULL,
+                    note TEXT,
                     bounded_context TEXT NOT NULL,
                     created_at_ts INTEGER NOT NULL,
-                    updated_at_ts INTEGER NOT NULL,
-                    note TEXT
+                    updated_at_ts INTEGER NOT NULL
                 );
 
                 -- Tabla intermedia para la relación muchos a muchos entre apps y environments
@@ -67,9 +67,9 @@ impl IStorage for TursoStorage {
                     id TEXT PRIMARY KEY,
                     app_id TEXT NOT NULL,
                     value INTEGER NOT NULL,
+                    note TEXT,
                     created_at_ts INTEGER NOT NULL,
                     updated_at_ts INTEGER NOT NULL,
-                    note TEXT,
                     FOREIGN KEY (app_id) REFERENCES apps (id) ON DELETE CASCADE
                 );
 
@@ -79,9 +79,9 @@ impl IStorage for TursoStorage {
                     app_id TEXT NOT NULL,
                     username TEXT NOT NULL,
                     password TEXT NOT NULL,
+                    note TEXT,
                     created_at_ts INTEGER NOT NULL,
                     updated_at_ts INTEGER NOT NULL,
-                    note TEXT,
                     FOREIGN KEY (app_id) REFERENCES apps (id) ON DELETE CASCADE
                 );
 
@@ -91,9 +91,9 @@ impl IStorage for TursoStorage {
                     app_id TEXT NOT NULL,
                     key TEXT NOT NULL,
                     value TEXT NOT NULL,
+                    note TEXT,
                     created_at_ts INTEGER NOT NULL,
                     updated_at_ts INTEGER NOT NULL,
-                    note TEXT,
                     FOREIGN KEY (app_id) REFERENCES apps (id) ON DELETE CASCADE
                 );
             "#,
@@ -103,12 +103,52 @@ impl IStorage for TursoStorage {
         Ok(())
     }
 
-    fn store_environment(&mut self, environment: NewEnvironment) {
-        todo!()
+    async fn store_environment(&mut self, environment: NewEnvironment) {
+        println!("TursoStorage store_environment");
+        let now = chrono::Utc::now().timestamp();
+        let uuid = uuid::Uuid::new_v4().to_string();
+
+        let mut stmt = self.conn
+        .prepare("INSERT INTO environments (id, name, note, created_at_ts, updated_at_ts) VALUES (?, ?, ?, ?, ?)")
+        .await
+        .unwrap();
+
+        stmt.execute([
+            uuid,
+            environment.name,
+            environment.note,
+            now.to_string(),
+            now.to_string(),
+        ])
+        .await
+        .unwrap();
     }
 
-    fn get_environments(&self) -> Vec<Environment> {
-        todo!()
+    async fn get_environments(&self) -> Vec<Environment> {
+        println!("TursoStorage get_environments");
+        let mut rows = self
+            .conn
+            .query("SELECT * FROM environments", ())
+            .await
+            .unwrap();
+        let mut environments = Vec::new();
+
+        while let Some(row) = rows.next().await.unwrap() {
+            let id: String = row.get(0).unwrap();
+            let name: String = row.get(1).unwrap();
+            let note: String = row.get(2).unwrap();
+            let created_at_ts: i64 = row.get(3).unwrap();
+            let updated_at_ts: i64 = row.get(4).unwrap();
+            environments.push(Environment {
+                id,
+                name,
+                note,
+                created_at_ts,
+                updated_at_ts,
+            });
+        }
+
+        environments
     }
 
     fn store_app(&mut self, app: NewApp) {

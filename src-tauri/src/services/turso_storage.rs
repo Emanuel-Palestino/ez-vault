@@ -6,19 +6,6 @@ pub struct TursoStorage {
 }
 
 impl IStorage for TursoStorage {
-    /* async fn test(&self) -> Result<(), Box<dyn error::Error>> {
-        println!("TursoStorage test");
-        let mut rows = self.conn.query("SELECT * FROM environments", ()).await?;
-        while let Some(row) = rows.next().await? {
-            let id: i64 = row.get(0)?;
-            let name: String = row.get(1)?;
-            let note: String = row.get(2)?;
-            println!("id: {}, name: {}, note: {}", id, name, note);
-        }
-
-        Ok(())
-    } */
-
     async fn init(&self) -> Result<(), Box<dyn std::error::Error>> {
         println!("TursoStorage init");
 
@@ -37,8 +24,8 @@ impl IStorage for TursoStorage {
                 -- Tabla de Aplicaciones (Apps)
                 CREATE TABLE IF NOT EXISTS apps (
                     id TEXT PRIMARY KEY,
-                    url TEXT NOT NULL,
                     name TEXT NOT NULL,
+                    url TEXT NOT NULL,
                     note TEXT,
                     bounded_context TEXT NOT NULL,
                     created_at_ts INTEGER NOT NULL,
@@ -151,8 +138,48 @@ impl IStorage for TursoStorage {
         environments
     }
 
-    fn store_app(&mut self, app: NewApp) {
-        todo!()
+    async fn store_app(&mut self, app: NewApp) {
+        println!("TursoStorage store_app");
+
+        let now = chrono::Utc::now().timestamp();
+        let uuid = uuid::Uuid::new_v4().to_string();
+
+        let mut stmt = self.conn
+        .prepare("INSERT INTO apps (id, name, url, note, bounded_context, created_at_ts, updated_at_ts) VALUES (?, ?, ?, ?, ?, ?, ?)")
+        .await
+        .unwrap();
+
+        stmt.execute([
+            uuid.clone(),
+            app.name,
+            app.url,
+            app.note,
+            app.bounded_context,
+            now.to_string(),
+            now.to_string(),
+        ])
+        .await
+        .unwrap();
+
+        for environment_id in app.environment_ids {
+            let mut stmt = self
+                .conn
+                .prepare("INSERT INTO app_environments (app_id, environment_id) VALUES (?, ?)")
+                .await
+                .unwrap();
+
+            stmt.execute([uuid.clone(), environment_id]).await.unwrap();
+        }
+
+        for label in app.labels {
+            let mut stmt = self
+                .conn
+                .prepare("INSERT INTO app_labels (app_id, label) VALUES (?, ?)")
+                .await
+                .unwrap();
+
+            stmt.execute([uuid.clone(), label]).await.unwrap();
+        }
     }
 
     async fn get_apps(&self) -> Vec<App> {
@@ -161,23 +188,57 @@ impl IStorage for TursoStorage {
         let mut apps = Vec::new();
 
         while let Some(row) = rows.next().await.unwrap() {
-            let id: i64 = row.get(0).unwrap();
+            let id: String = row.get(0).unwrap();
             let name: String = row.get(1).unwrap();
             let url: String = row.get(2).unwrap();
             let note: String = row.get(3).unwrap();
             let bounded_context: String = row.get(4).unwrap();
             let created_at_ts: i64 = row.get(5).unwrap();
             let updated_at_ts: i64 = row.get(6).unwrap();
+
+            let mut env_rows = self.conn
+                .query(
+                    "SELECT e.* FROM environments e JOIN app_environments ae ON e.id =ae.environment_id WHERE ae.app_id = ?",
+                    &[id.clone()],
+                )
+                .await
+                .unwrap();
+            let mut environments = Vec::new();
+            while let Some(env_row) = env_rows.next().await.unwrap() {
+                let env_id: String = env_row.get(0).unwrap();
+                let env_name: String = env_row.get(1).unwrap();
+                let env_note: String = env_row.get(2).unwrap();
+                let env_created_at_ts: i64 = env_row.get(3).unwrap();
+                let env_updated_at_ts: i64 = env_row.get(4).unwrap();
+                environments.push(Environment {
+                    id: env_id,
+                    name: env_name,
+                    note: env_note,
+                    created_at_ts: env_created_at_ts,
+                    updated_at_ts: env_updated_at_ts,
+                });
+            }
+
+            let mut label_rows = self.conn
+                .query("SELECT label FROM app_labels WHERE app_id = ?", &[id.clone()])
+                .await
+                .unwrap();
+            let mut labels = Vec::new();
+            while let Some(label_row) = label_rows.next().await.unwrap() {
+                let label: String = label_row.get(0).unwrap();
+                labels.push(label);
+            }
+
             apps.push(App {
-                id: id.to_string(),
+                id,
                 name,
                 url,
                 note,
                 bounded_context,
                 created_at_ts,
                 updated_at_ts,
-                environments: Vec::new(),
-                labels: Vec::new(),
+                environments,
+                labels,
             });
         }
 

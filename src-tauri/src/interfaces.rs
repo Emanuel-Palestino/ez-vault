@@ -6,7 +6,7 @@ pub trait IStorage {
     async fn store_environment(&mut self, environment: NewEnvironment);
     async fn get_environments(&self) -> Vec<Environment>;
 
-    fn store_app(&mut self, app: NewApp);
+    async fn store_app(&mut self, app: NewApp);
     async fn get_apps(&self) -> Vec<App>;
 
     fn store_port(&mut self, port: NewPort);

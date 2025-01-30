@@ -16,7 +16,7 @@ pub fn run() {
             web_commands::command_check,
             web_commands::command_create_environment,
             web_commands::command_get_environments,
-            //web_commands::command_create_app,
+            web_commands::command_create_app,
             web_commands::command_get_apps,
             /* web_commands::command_create_port,
             web_commands::command_get_ports,

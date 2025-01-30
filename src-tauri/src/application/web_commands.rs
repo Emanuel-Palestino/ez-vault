@@ -27,9 +27,10 @@ pub async fn command_get_environments(state: tauri::State<'_, AsyncMutex<VaultAp
 }
 
 #[tauri::command]
-pub fn command_create_app(state: tauri::State<Mutex<VaultApp>>, app: NewApp) {
-    let mut vault_state = state.lock().unwrap();
-    vault_state.storage.store_app(app);
+pub async fn command_create_app(state: tauri::State<'_, AsyncMutex<VaultApp>>, app: NewApp) -> Result<(), ()> {
+    let mut vault_state = state.lock().await;
+    vault_state.storage.store_app(app).await;
+    Ok(())
 }
 
 #[tauri::command]

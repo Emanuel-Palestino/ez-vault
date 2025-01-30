@@ -33,7 +33,7 @@ impl IStorage for InMemoryStorage {
         self.environments.clone()
     }
 
-    fn store_app(&mut self, app: NewApp) {
+    async fn store_app(&mut self, app: NewApp) {
         let now = Utc::now().timestamp();
         self.apps.push(App {
             id: Uuid::new_v4().to_string(),

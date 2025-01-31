@@ -245,31 +245,440 @@ impl IStorage for TursoStorage {
         apps
     }
 
-    fn store_port(&mut self, port: NewPort) {
-        todo!()
+    async fn store_port(&mut self, port: NewPort) {
+        println!("TursoStorage store_port");
+
+        let now = chrono::Utc::now().timestamp();
+        let uuid = uuid::Uuid::new_v4().to_string();
+
+        let mut stmt = self.conn
+        .prepare("INSERT INTO ports (id, app_id, value, note, created_at_ts, updated_at_ts) VALUES (?, ?, ?, ?, ?, ?)")
+        .await
+        .unwrap();
+
+        stmt.execute([
+            uuid,
+            port.app_id,
+            port.value.to_string(),
+            port.note,
+            now.to_string(),
+            now.to_string(),
+        ])
+        .await
+        .unwrap();
     }
 
-    fn get_ports(&self) -> Vec<Port> {
-        todo!()
+    async fn get_ports(&self) -> Vec<Port> {
+        println!("TursoStorage get_ports");
+        let mut rows = self.conn.query("SELECT * FROM ports", ()).await.unwrap();
+        let mut ports = Vec::new();
+
+        while let Some(row) = rows.next().await.unwrap() {
+            let id: String = row.get(0).unwrap();
+            let app_id: String = row.get(1).unwrap();
+            let value: u32 = row.get(2).unwrap();
+            let note: String = row.get(3).unwrap();
+            let created_at_ts: i64 = row.get(4).unwrap();
+            let updated_at_ts: i64 = row.get(5).unwrap();
+
+            let mut app_rows = self
+                .conn
+                .query("SELECT * FROM apps WHERE id = ?", &[app_id.clone()])
+                .await
+                .unwrap();
+
+            let app_row = app_rows.next().await.unwrap().unwrap();
+            let app_id: String = app_row.get(0).unwrap();
+            let app_name: String = app_row.get(1).unwrap();
+            let app_url: String = app_row.get(2).unwrap();
+            let app_note: String = app_row.get(3).unwrap();
+            let app_bounded_context: String = app_row.get(4).unwrap();
+            let app_created_at_ts: i64 = app_row.get(5).unwrap();
+
+            let mut env_rows = self
+                .conn
+                .query(
+                    "SELECT e.* FROM environments e JOIN app_environments ae ON e.id =ae.environment_id WHERE ae.app_id = ?",
+                    &[app_id.clone()],
+                )
+                .await
+                .unwrap();
+            let mut environments = Vec::new();
+            while let Some(env_row) = env_rows.next().await.unwrap() {
+                let env_id: String = env_row.get(0).unwrap();
+                let env_name: String = env_row.get(1).unwrap();
+                let env_note: String = env_row.get(2).unwrap();
+                let env_created_at_ts: i64 = env_row.get(3).unwrap();
+                let env_updated_at_ts: i64 = env_row.get(4).unwrap();
+                environments.push(Environment {
+                    id: env_id,
+                    name: env_name,
+                    note: env_note,
+                    created_at_ts: env_created_at_ts,
+                    updated_at_ts: env_updated_at_ts,
+                });
+            }
+
+            let mut label_rows = self
+                .conn
+                .query("SELECT label FROM app_labels WHERE app_id = ?", &[app_id.clone()])
+                .await
+                .unwrap();
+            let mut labels = Vec::new();
+            while let Some(label_row) = label_rows.next().await.unwrap() {
+                let label: String = label_row.get(0).unwrap();
+                labels.push(label);
+            }
+
+            let app = App {
+                id: app_id,
+                name: app_name,
+                url: app_url,
+                note: app_note,
+                bounded_context: app_bounded_context,
+                created_at_ts: app_created_at_ts,
+                updated_at_ts: 0,
+                environments,
+                labels,
+            };
+
+            ports.push(Port {
+                id,
+                app,
+                value,
+                note,
+                created_at_ts,
+                updated_at_ts,
+            });
+        }
+
+        ports
     }
 
-    fn get_ports_by_app_id(&self, app_id: String) -> Vec<Port> {
-        todo!()
+    async fn get_ports_by_app_id(&self, app_id: String) -> Vec<Port> {
+        println!("TursoStorage get_ports_by_app_id");
+        let mut rows = self
+            .conn
+            .query("SELECT * FROM ports WHERE app_id = ?", &[app_id])
+            .await
+            .unwrap();
+        let mut ports = Vec::new();
+
+        while let Some(row) = rows.next().await.unwrap() {
+            let id: String = row.get(0).unwrap();
+            let app_id: String = row.get(1).unwrap();
+            let value: u32 = row.get(2).unwrap();
+            let note: String = row.get(3).unwrap();
+            let created_at_ts: i64 = row.get(4).unwrap();
+            let updated_at_ts: i64 = row.get(5).unwrap();
+
+            let mut app_rows = self
+                .conn
+                .query("SELECT * FROM apps WHERE id = ?", &[app_id.clone()])
+                .await
+                .unwrap();
+
+            let app_row = app_rows.next().await.unwrap().unwrap();
+            let app_id: String = app_row.get(0).unwrap();
+            let app_name: String = app_row.get(1).unwrap();
+            let app_url: String = app_row.get(2).unwrap();
+            let app_note: String = app_row.get(3).unwrap();
+            let app_bounded_context: String = app_row.get(4).unwrap();
+            let app_created_at_ts: i64 = app_row.get(5).unwrap();
+
+            let mut env_rows = self
+                .conn
+                .query(
+                    "SELECT e.* FROM environments e JOIN app_environments ae ON e.id =ae.environment_id WHERE ae.app_id = ?",
+                    &[app_id.clone()],
+                )
+                .await
+                .unwrap();
+            let mut environments = Vec::new();
+            while let Some(env_row) = env_rows.next().await.unwrap() {
+                let env_id: String = env_row.get(0).unwrap();
+                let env_name: String = env_row.get(1).unwrap();
+                let env_note: String = env_row.get(2).unwrap();
+                let env_created_at_ts: i64 = env_row.get(3).unwrap();
+                let env_updated_at_ts: i64 = env_row.get(4).unwrap();
+                environments.push(Environment {
+                    id: env_id,
+                    name: env_name,
+                    note: env_note,
+                    created_at_ts: env_created_at_ts,
+                    updated_at_ts: env_updated_at_ts,
+                });
+            }
+
+            let mut label_rows = self
+                .conn
+                .query("SELECT label FROM app_labels WHERE app_id = ?", &[app_id.clone()])
+                .await
+                .unwrap();
+            let mut labels = Vec::new();
+            while let Some(label_row) = label_rows.next().await.unwrap() {
+                let label: String = label_row.get(0).unwrap();
+                labels.push(label);
+            }
+
+            let app = App {
+                id: app_id,
+                name: app_name,
+                url: app_url,
+                note: app_note,
+                bounded_context: app_bounded_context,
+                created_at_ts: app_created_at_ts,
+                updated_at_ts: 0,
+                environments,
+                labels,
+            };
+
+            ports.push(Port {
+                id,
+                app,
+                value,
+                note,
+                created_at_ts,
+                updated_at_ts,
+            });
+        }
+
+        ports
     }
 
-    fn store_credential(&mut self, credential: NewCredential) {
-        todo!()
+    async fn store_credential(&mut self, credential: NewCredential) {
+        println!("TursoStorage store_credential");
+
+        let now = chrono::Utc::now().timestamp();
+        let uuid = uuid::Uuid::new_v4().to_string();
+
+        let mut stmt = self.conn
+        .prepare("INSERT INTO credentials (id, app_id, username, password, note, created_at_ts, updated_at_ts) VALUES (?, ?, ?, ?, ?, ?, ?)")
+        .await
+        .unwrap();
+
+        stmt.execute([
+            uuid,
+            credential.app_id,
+            credential.username,
+            credential.password,
+            credential.note,
+            now.to_string(),
+            now.to_string(),
+        ])
+        .await
+        .unwrap();
     }
 
-    fn get_credentials_by_app_id(&self, app_id: String) -> Vec<Credential> {
-        todo!()
+    async fn get_credentials_by_app_id(&self, app_id: String) -> Vec<Credential> {
+        println!("TursoStorage get_credentials_by_app_id");
+
+        let mut rows = self
+            .conn
+            .query("SELECT * FROM credentials WHERE app_id = ?", &[app_id])
+            .await
+            .unwrap();
+        let mut credentials = Vec::new();
+
+        while let Some(row) = rows.next().await.unwrap() {
+            let id: String = row.get(0).unwrap();
+            let app_id: String = row.get(1).unwrap();
+            let username: String = row.get(2).unwrap();
+            let password: String = row.get(3).unwrap();
+            let note: String = row.get(4).unwrap();
+            let created_at_ts: i64 = row.get(5).unwrap();
+            let updated_at_ts: i64 = row.get(6).unwrap();
+
+            let mut app_rows = self
+                .conn
+                .query("SELECT * FROM apps WHERE id = ?", &[app_id.clone()])
+                .await
+                .unwrap();
+
+            let app_row = app_rows.next().await.unwrap().unwrap();
+            let app_id: String = app_row.get(0).unwrap();
+            let app_name: String = app_row.get(1).unwrap();
+            let app_url: String = app_row.get(2).unwrap();
+            let app_note: String = app_row.get(3).unwrap();
+            let app_bounded_context: String = app_row.get(4).unwrap();
+            let app_created_at_ts: i64 = app_row.get(5).unwrap();
+
+            let mut env_rows = self
+                .conn
+                .query(
+                    "SELECT e.* FROM environments e JOIN app_environments ae ON e.id =ae.environment_id WHERE ae.app_id = ?",
+                    &[app_id.clone()],
+                )
+                .await
+                .unwrap();
+            let mut environments = Vec::new();
+            while let Some(env_row) = env_rows.next().await.unwrap() {
+                let env_id: String = env_row.get(0).unwrap();
+                let env_name: String = env_row.get(1).unwrap();
+                let env_note: String = env_row.get(2).unwrap();
+                let env_created_at_ts: i64 = env_row.get(3).unwrap();
+                let env_updated_at_ts: i64 = env_row.get(4).unwrap();
+                environments.push(Environment {
+                    id: env_id,
+                    name: env_name,
+                    note: env_note,
+                    created_at_ts: env_created_at_ts,
+                    updated_at_ts: env_updated_at_ts,
+                });
+            }
+
+            let mut label_rows = self
+                .conn
+                .query("SELECT label FROM app_labels WHERE app_id = ?", &[app_id.clone()])
+                .await
+                .unwrap();
+            let mut labels = Vec::new();
+            while let Some(label_row) = label_rows.next().await.unwrap() {
+                let label: String = label_row.get(0).unwrap();
+                labels.push(label);
+            }
+
+            let app = App {
+                id: app_id,
+                name: app_name,
+                url: app_url,
+                note: app_note,
+                bounded_context: app_bounded_context,
+                created_at_ts: app_created_at_ts,
+                updated_at_ts: 0,
+                environments,
+                labels,
+            };
+
+            credentials.push(Credential {
+                id,
+                app,
+                username,
+                password,
+                note,
+                created_at_ts,
+                updated_at_ts,
+            });
+        }
+
+        credentials
     }
 
-    fn store_secret(&mut self, secret: NewSecret) {
-        todo!()
+    async fn store_secret(&mut self, secret: NewSecret) {
+        println!("TursoStorage store_secret");
+
+        let now = chrono::Utc::now().timestamp();
+        let uuid = uuid::Uuid::new_v4().to_string();
+
+        let mut stmt = self.conn
+        .prepare("INSERT INTO secrets (id, app_id, key, value, note, created_at_ts, updated_at_ts) VALUES (?, ?, ?, ?, ?, ?, ?)")
+        .await
+        .unwrap();
+
+        stmt.execute([
+            uuid,
+            secret.app_id,
+            secret.key,
+            secret.value,
+            secret.note,
+            now.to_string(),
+            now.to_string(),
+        ])
+        .await
+        .unwrap();
     }
 
-    fn get_secrets_by_app_id(&self, app_id: String) -> Vec<Secret> {
-        todo!()
+    async fn get_secrets_by_app_id(&self, app_id: String) -> Vec<Secret> {
+        println!("TursoStorage get_secrets_by_app_id");
+
+        let mut rows = self
+            .conn
+            .query("SELECT * FROM secrets WHERE app_id = ?", &[app_id])
+            .await
+            .unwrap();
+        let mut secrets = Vec::new();
+
+        while let Some(row) = rows.next().await.unwrap() {
+            let id: String = row.get(0).unwrap();
+            let app_id: String = row.get(1).unwrap();
+            let key: String = row.get(2).unwrap();
+            let value: String = row.get(3).unwrap();
+            let note: String = row.get(4).unwrap();
+            let created_at_ts: i64 = row.get(5).unwrap();
+            let updated_at_ts: i64 = row.get(6).unwrap();
+
+            let mut app_rows = self
+                .conn
+                .query("SELECT * FROM apps WHERE id = ?", &[app_id.clone()])
+                .await
+                .unwrap();
+
+            let app_row = app_rows.next().await.unwrap().unwrap();
+            let app_id: String = app_row.get(0).unwrap();
+            let app_name: String = app_row.get(1).unwrap();
+            let app_url: String = app_row.get(2).unwrap();
+            let app_note: String = app_row.get(3).unwrap();
+            let app_bounded_context: String = app_row.get(4).unwrap();
+            let app_created_at_ts: i64 = app_row.get(5).unwrap();
+
+            let mut env_rows = self
+                .conn
+                .query(
+                    "SELECT e.* FROM environments e JOIN app_environments ae ON e.id =ae.environment_id WHERE ae.app_id = ?",
+                    &[app_id.clone()],
+                )
+                .await
+                .unwrap();
+            let mut environments = Vec::new();
+            while let Some(env_row) = env_rows.next().await.unwrap() {
+                let env_id: String = env_row.get(0).unwrap();
+                let env_name: String = env_row.get(1).unwrap();
+                let env_note: String = env_row.get(2).unwrap();
+                let env_created_at_ts: i64 = env_row.get(3).unwrap();
+                let env_updated_at_ts: i64 = env_row.get(4).unwrap();
+                environments.push(Environment {
+                    id: env_id,
+                    name: env_name,
+                    note: env_note,
+                    created_at_ts: env_created_at_ts,
+                    updated_at_ts: env_updated_at_ts,
+                });
+            }
+
+            let mut label_rows = self
+                .conn
+                .query("SELECT label FROM app_labels WHERE app_id = ?", &[app_id.clone()])
+                .await
+                .unwrap();
+            let mut labels = Vec::new();
+            while let Some(label_row) = label_rows.next().await.unwrap() {
+                let label: String = label_row.get(0).unwrap();
+                labels.push(label);
+            }
+
+            let app = App {
+                id: app_id,
+                name: app_name,
+                url: app_url,
+                note: app_note,
+                bounded_context: app_bounded_context,
+                created_at_ts: app_created_at_ts,
+                updated_at_ts: 0,
+                environments,
+                labels,
+            };
+
+            secrets.push(Secret {
+                id,
+                app,
+                key,
+                value,
+                note,
+                created_at_ts,
+                updated_at_ts,
+            });
+        }
+
+        secrets
     }
 }

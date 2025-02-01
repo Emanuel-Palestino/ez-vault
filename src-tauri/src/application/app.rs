@@ -1,22 +1,27 @@
 use super::storage_builder::StorageBuilder;
 use crate::interfaces::IStorage;
+use crate::services::TursoStorage;
 
 pub struct VaultApp {
     version: &'static str,
     // TODO: Make storage private and add getter
-    pub storage: Box<dyn IStorage + Send>,
+    pub storage: TursoStorage,
 }
 
 impl VaultApp {
-    pub fn new() -> VaultApp {
+    pub async fn new() -> Result<VaultApp, Box<dyn std::error::Error>> {
         let storage = StorageBuilder::new()
             .with_default_environment()
-            .build_in_memory_storage();
+            .with_database_url("test.db".to_string())
+            .build_turso_storage()
+            .await?;
 
-        VaultApp {
+        storage.init().await?;
+
+        Ok(VaultApp {
             version: "0.1.0",
-            storage: Box::new(storage),
-        }
+            storage: storage,
+        })
     }
 
     pub fn check(&self) {
@@ -28,12 +33,16 @@ impl VaultApp {
     } */
 }
 
-use std::sync::Mutex;
+use tauri::async_runtime::Mutex;
 use tauri::Manager;
 pub fn main_tauri_setup(
 ) -> impl Fn(&mut tauri::App) -> std::result::Result<(), Box<dyn std::error::Error>> {
     |app| {
-        app.manage(Mutex::new(VaultApp::new()));
-        Ok(())
+        // TODO: verify this block code, is it correct?
+        tauri::async_runtime::block_on(async {
+            let vault_app = VaultApp::new().await?;
+            app.manage(Mutex::new(vault_app));
+            Ok(())
+        })
     }
 }

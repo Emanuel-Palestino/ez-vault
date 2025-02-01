@@ -42,7 +42,7 @@ pub struct App {
 #[derive(Debug, Deserialize)]
 pub struct NewPort {
     pub app_id: String,
-    pub value: u16,
+    pub value: u32,
     pub note: String,
 }
 
@@ -50,7 +50,7 @@ pub struct NewPort {
 pub struct Port {
     pub id: String,
     pub app: App,
-    pub value: u16,
+    pub value: u32,
     pub note: String,
     pub created_at_ts: i64,
     pub updated_at_ts: i64,

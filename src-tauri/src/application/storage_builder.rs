@@ -2,7 +2,11 @@ use std::error;
 
 use libsql::Builder;
 
-use crate::{interfaces::IStorage, services::{InMemoryStorage, TursoStorage}, types::NewEnvironment};
+use crate::{
+    interfaces::IStorage,
+    services::{InMemoryStorage, TursoStorage},
+    types::NewEnvironment,
+};
 
 pub struct StorageBuilder {
     default_environment: Option<NewEnvironment>,
@@ -56,8 +60,6 @@ impl StorageBuilder {
         let db = Builder::new_local(url).build().await?;
         let conn = db.connect()?;
 
-        Ok(TursoStorage {
-            conn,
-        })
+        Ok(TursoStorage { conn })
     }
 }

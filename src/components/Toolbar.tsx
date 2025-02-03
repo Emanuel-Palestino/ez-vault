@@ -14,6 +14,7 @@ declare module 'react' {
 }
 
 interface ToolbarProps {
+  openSettings: () => void
   openCreateApp: () => void
   openCreateEnv: () => void
   openCreateCredential: () => void
@@ -22,6 +23,7 @@ interface ToolbarProps {
 }
 
 export const Toolbar: FC<ToolbarProps> = ({
+  openSettings,
   openCreateApp,
   openCreateEnv,
   openCreateCredential,
@@ -32,7 +34,10 @@ export const Toolbar: FC<ToolbarProps> = ({
     <>
       <nav className="w-full flex justify-end sticky top-2 z-50">
         <section className="menu menu-horizontal bg-base-200 rounded-box">
-          <button className="btn">
+          <button
+            className="btn"
+            onClick={openSettings}
+          >
             Settings
           </button>
           <button

@@ -11,4 +11,20 @@
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
+
+  <script>
+    function checkScroll() {
+      const hasVerticalScroll = document.documentElement.scrollHeight > window.innerHeight;
+
+      if (hasVerticalScroll) {
+        document.documentElement.style.setProperty("scrollbar-gutter", "stable");
+      } else {
+        document.documentElement.style.setProperty("scrollbar-gutter", "auto");
+      }
+    }
+
+    window.addEventListener("resize", checkScroll);
+
+    window.addEventListener("load", checkScroll);
+  </script>
 </html>

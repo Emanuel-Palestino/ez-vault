@@ -10,14 +10,18 @@ use crate::{
 
 pub struct StorageBuilder {
     default_environment: Option<NewEnvironment>,
+    database_name: String,
     database_url: Option<String>,
+    database_token: Option<String>,
 }
 
 impl StorageBuilder {
     pub fn new() -> StorageBuilder {
         StorageBuilder {
             default_environment: None,
+            database_name: "local.db".to_string(),
             database_url: None,
+            database_token: None,
         }
     }
 
@@ -54,10 +58,37 @@ impl StorageBuilder {
         }
     }
 
-    pub async fn build_turso_storage(self) -> Result<TursoStorage, Box<dyn error::Error>> {
-        let url = self.database_url.ok_or("Database URL not set")?;
+    pub fn with_database_token(self, database_token: String) -> StorageBuilder {
+        StorageBuilder {
+            database_token: Some(database_token),
+            ..self
+        }
+    }
 
-        let db = Builder::new_local(url).build().await?;
+    pub async fn build_local_turso_storage(self) -> Result<TursoStorage, Box<dyn error::Error>> {
+        let db = Builder::new_local(self.database_name).build().await?;
+        let conn = db.connect()?;
+
+        Ok(TursoStorage { conn })
+    }
+
+    pub async fn build_remote_turso_storage(self) -> Result<TursoStorage, Box<dyn error::Error>> {
+        let url = self.database_url.ok_or("Database URL not set")?;
+        let token = self.database_token.ok_or("Database token not set")?;
+
+        let db = Builder::new_remote(url, token).build().await?;
+        let conn = db.connect()?;
+
+        Ok(TursoStorage { conn })
+    }
+
+    pub async fn build_replica_turso_storage(self) -> Result<TursoStorage, Box<dyn error::Error>> {
+        let url = self.database_url.ok_or("Database URL not set")?;
+        let token = self.database_token.ok_or("Database token not set")?;
+
+        let db = Builder::new_remote_replica(self.database_name, url, token)
+            .build()
+            .await?;
         let conn = db.connect()?;
 
         Ok(TursoStorage { conn })

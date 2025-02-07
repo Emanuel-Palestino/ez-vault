@@ -4,7 +4,7 @@ import { tauriStorageEngine } from "./engine";
 import { StorageType } from "../types/settings";
 
 type SettingsStore = {
-  storageType: StorageType
+  "storage-type": StorageType
   databaseUrl: string;
 }
 
@@ -19,9 +19,9 @@ export const useSettingsStore = create<SettingsStoreState>()(
   persist(
     (set) => ({
       databaseUrl: "",
-      storageType: StorageType.LOCAL,
+      "storage-type": StorageType.LOCAL,
 
-      setStorageType: (type: StorageType) => set({ storageType: type }),
+      setStorageType: (type: StorageType) => set({ "storage-type": type }),
       setDatabaseUrl: (url: string) => set({ databaseUrl: url }),
     }),
     {

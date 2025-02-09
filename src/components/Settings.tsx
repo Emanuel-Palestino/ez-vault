@@ -29,8 +29,8 @@ export const Settings: FC<SettingsProps> = ({
     await settings.setStorageType(type)
     if (type === StorageType.REMOTE || type === StorageType.REPLICA) {
       await settings.setDatabaseUrl(url)
-      await updateStorageType(type, url, token)
     }
+    await updateStorageType(type, url, token)
   }
 
   useEffect(() => {

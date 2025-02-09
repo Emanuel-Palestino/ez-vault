@@ -132,6 +132,7 @@ pub async fn command_update_storage_type(
         store.set("databaseToken", token.clone());
     } else {
         store.delete("databaseToken");
+        store.delete("databaseUrl");
     }
 
     vault_state.update_storage_type(s_type, url, token).await;

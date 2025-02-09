@@ -51,3 +51,10 @@ h3 {
 .modal-box {
   @apply max-h-[calc(11/12*100%)];
 }
+
+.modal {
+  &:not(dialog:not(.modal-open)),
+  &::backdrop {
+    background-color: oklch(0% 0 0/ 0.7);
+  }
+}

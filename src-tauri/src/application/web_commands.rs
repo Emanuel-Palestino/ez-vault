@@ -1,7 +1,8 @@
 use super::app::VaultApp;
 use crate::{interfaces::IStorage, types::*};
-use tauri::async_runtime::Mutex as AsyncMutex;
 use std::sync::Mutex;
+use tauri::async_runtime::Mutex as AsyncMutex;
+use tauri_plugin_store::StoreExt;
 
 #[tauri::command]
 pub fn command_check(state: tauri::State<Mutex<VaultApp>>) {
@@ -20,35 +21,47 @@ pub async fn command_create_environment(
 }
 
 #[tauri::command]
-pub async fn command_get_environments(state: tauri::State<'_, AsyncMutex<VaultApp>>) -> Result<Vec<Environment>, ()> {
+pub async fn command_get_environments(
+    state: tauri::State<'_, AsyncMutex<VaultApp>>,
+) -> Result<Vec<Environment>, ()> {
     let vault_state = state.lock().await;
     let environments = vault_state.storage.get_environments().await;
     Ok(environments.into())
 }
 
 #[tauri::command]
-pub async fn command_create_app(state: tauri::State<'_, AsyncMutex<VaultApp>>, app: NewApp) -> Result<(), ()> {
+pub async fn command_create_app(
+    state: tauri::State<'_, AsyncMutex<VaultApp>>,
+    app: NewApp,
+) -> Result<(), ()> {
     let mut vault_state = state.lock().await;
     vault_state.storage.store_app(app).await;
     Ok(())
 }
 
 #[tauri::command]
-pub async fn command_get_apps(state: tauri::State<'_, AsyncMutex<VaultApp>>) -> Result<Vec<App>, ()> {
+pub async fn command_get_apps(
+    state: tauri::State<'_, AsyncMutex<VaultApp>>,
+) -> Result<Vec<App>, ()> {
     let vault_state = state.lock().await;
     let apps = vault_state.storage.get_apps().await;
     Ok(apps.into())
 }
 
 #[tauri::command]
-pub async fn command_create_port(state: tauri::State<'_, AsyncMutex<VaultApp>>, port: NewPort) -> Result<(), ()> {
+pub async fn command_create_port(
+    state: tauri::State<'_, AsyncMutex<VaultApp>>,
+    port: NewPort,
+) -> Result<(), ()> {
     let mut vault_state = state.lock().await;
     vault_state.storage.store_port(port).await;
     Ok(())
 }
 
 #[tauri::command]
-pub async fn command_get_ports(state: tauri::State<'_, AsyncMutex<VaultApp>>) -> Result<Vec<Port>, ()> {
+pub async fn command_get_ports(
+    state: tauri::State<'_, AsyncMutex<VaultApp>>,
+) -> Result<Vec<Port>, ()> {
     let vault_state = state.lock().await;
     let ports = vault_state.storage.get_ports().await;
     Ok(ports.into())
@@ -65,7 +78,10 @@ pub async fn command_get_ports_by_app_id(
 }
 
 #[tauri::command]
-pub async fn command_create_credential(state: tauri::State<'_, AsyncMutex<VaultApp>>, credential: NewCredential) -> Result<(), ()> {
+pub async fn command_create_credential(
+    state: tauri::State<'_, AsyncMutex<VaultApp>>,
+    credential: NewCredential,
+) -> Result<(), ()> {
     let mut vault_state = state.lock().await;
     vault_state.storage.store_credential(credential).await;
     Ok(())
@@ -82,7 +98,10 @@ pub async fn command_get_credentials_by_app_id(
 }
 
 #[tauri::command]
-pub async fn command_create_secret(state: tauri::State<'_, AsyncMutex<VaultApp>>, secret: NewSecret) -> Result<(), ()> {
+pub async fn command_create_secret(
+    state: tauri::State<'_, AsyncMutex<VaultApp>>,
+    secret: NewSecret,
+) -> Result<(), ()> {
     let mut vault_state = state.lock().await;
     vault_state.storage.store_secret(secret).await;
     Ok(())
@@ -96,4 +115,26 @@ pub async fn command_get_secrets_by_app_id(
     let vault_state = state.lock().await;
     let secrets = vault_state.storage.get_secrets_by_app_id(app_id).await;
     Ok(secrets.into())
+}
+
+#[tauri::command]
+pub async fn command_update_storage_type(
+    app_handle: tauri::AppHandle,
+    state: tauri::State<'_, AsyncMutex<VaultApp>>,
+    storage_type: String,
+    url: Option<String>,
+    token: Option<String>,
+) -> Result<(), ()> {
+    let mut vault_state = state.lock().await;
+    let s_type = StorageType::from_str(storage_type.as_str());
+    let store = app_handle.store("store.json").unwrap();
+    if s_type != StorageType::LOCAL {
+        store.set("databaseToken", token.clone());
+    } else {
+        store.delete("databaseToken");
+        store.delete("databaseUrl");
+    }
+
+    vault_state.update_storage_type(s_type, url, token).await;
+    Ok(())
 }

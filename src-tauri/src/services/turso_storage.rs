@@ -219,8 +219,12 @@ impl IStorage for TursoStorage {
                 });
             }
 
-            let mut label_rows = self.conn
-                .query("SELECT label FROM app_labels WHERE app_id = ?", &[id.clone()])
+            let mut label_rows = self
+                .conn
+                .query(
+                    "SELECT label FROM app_labels WHERE app_id = ?",
+                    &[id.clone()],
+                )
                 .await
                 .unwrap();
             let mut labels = Vec::new();
@@ -321,7 +325,10 @@ impl IStorage for TursoStorage {
 
             let mut label_rows = self
                 .conn
-                .query("SELECT label FROM app_labels WHERE app_id = ?", &[app_id.clone()])
+                .query(
+                    "SELECT label FROM app_labels WHERE app_id = ?",
+                    &[app_id.clone()],
+                )
                 .await
                 .unwrap();
             let mut labels = Vec::new();
@@ -412,7 +419,10 @@ impl IStorage for TursoStorage {
 
             let mut label_rows = self
                 .conn
-                .query("SELECT label FROM app_labels WHERE app_id = ?", &[app_id.clone()])
+                .query(
+                    "SELECT label FROM app_labels WHERE app_id = ?",
+                    &[app_id.clone()],
+                )
                 .await
                 .unwrap();
             let mut labels = Vec::new();
@@ -529,7 +539,10 @@ impl IStorage for TursoStorage {
 
             let mut label_rows = self
                 .conn
-                .query("SELECT label FROM app_labels WHERE app_id = ?", &[app_id.clone()])
+                .query(
+                    "SELECT label FROM app_labels WHERE app_id = ?",
+                    &[app_id.clone()],
+                )
                 .await
                 .unwrap();
             let mut labels = Vec::new();
@@ -647,7 +660,10 @@ impl IStorage for TursoStorage {
 
             let mut label_rows = self
                 .conn
-                .query("SELECT label FROM app_labels WHERE app_id = ?", &[app_id.clone()])
+                .query(
+                    "SELECT label FROM app_labels WHERE app_id = ?",
+                    &[app_id.clone()],
+                )
                 .await
                 .unwrap();
             let mut labels = Vec::new();

@@ -10,6 +10,7 @@ use application::{main_tauri_setup, web_commands};
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
+        .plugin(tauri_plugin_store::Builder::new().build())
         .setup(main_tauri_setup())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
@@ -25,6 +26,7 @@ pub fn run() {
             web_commands::command_get_credentials_by_app_id,
             web_commands::command_create_secret,
             web_commands::command_get_secrets_by_app_id,
+            web_commands::command_update_storage_type,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

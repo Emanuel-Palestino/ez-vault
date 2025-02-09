@@ -2,6 +2,7 @@ import { FC, FormEvent, useEffect, useState } from "react"
 import { Modal } from "./ui/Modal"
 import { useSettingsStore } from "../store/settingsStore"
 import { StorageType } from "../types/settings"
+import { updateStorageType } from "../services/storage"
 
 interface SettingsProps {
   closeModal: () => void
@@ -15,7 +16,7 @@ export const Settings: FC<SettingsProps> = ({
 
   const settings = useSettingsStore()
 
-  const [storageType, setStorageType] = useState<StorageType>(settings["storage-type"])
+  const [storageType, setStorageType] = useState<StorageType>(settings.storageType)
 
   const handleStorageSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -25,16 +26,16 @@ export const Settings: FC<SettingsProps> = ({
     const url = data.get('url') as string
     const token = data.get('token') as string
 
-    settings.setStorageType(type)
+    await settings.setStorageType(type)
     if (type === StorageType.REMOTE || type === StorageType.REPLICA) {
-      settings.setDatabaseUrl(url)
-      // updated storage service
+      await settings.setDatabaseUrl(url)
+      await updateStorageType(type, url, token)
     }
   }
 
   useEffect(() => {
-    setStorageType(settings["storage-type"])
-  }, [settings["storage-type"]])
+    setStorageType(settings.storageType)
+  }, [settings.storageType])
 
   return (
     <Modal ref={modalRef}>
@@ -69,6 +70,7 @@ export const Settings: FC<SettingsProps> = ({
                     className="input validator"
                     name="url"
                     placeholder="Turso database url"
+                    defaultValue={settings.databaseUrl}
                     required
                     autoComplete="off"
                   />

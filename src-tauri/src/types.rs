@@ -93,3 +93,23 @@ pub struct Secret {
     pub created_at_ts: i64,
     pub updated_at_ts: i64,
 }
+
+
+// ENUMS
+#[derive(Debug, PartialEq)]
+pub enum StorageType {
+    LOCAL,
+    REMOTE,
+    REPLICA,
+}
+
+impl StorageType {
+    pub fn from_str(s: &str) -> StorageType {
+        match s {
+            "LOCAL" => StorageType::LOCAL,
+            "REMOTE" => StorageType::REMOTE,
+            "REPLICA" => StorageType::REPLICA,
+            _ => StorageType::LOCAL,
+        }
+    }
+}

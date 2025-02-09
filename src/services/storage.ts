@@ -13,6 +13,7 @@ import {
 } from '../types/entities'
 import useSWR, { mutate } from 'swr'
 import { FETCHER, FetcherArgs, TAURI_CMD } from '../utils/constants'
+import { StorageType } from '../types/settings'
 
 export const createEnvironment = async (environment: NewEnvironment) => {
   await invoke(TAURI_CMD.CREATE_ENVIRONMENT, { environment })
@@ -126,4 +127,8 @@ export const useGetSecretsByAppId = (appId: string) => {
     isError: error,
     isLoading: isLoading,
   }
+}
+
+export const updateStorageType = async (storageType: StorageType, url?: string, token?: string) => {
+  await invoke(TAURI_CMD.UPDATE_STORAGE_TYPE, { storageType, url, token })
 }

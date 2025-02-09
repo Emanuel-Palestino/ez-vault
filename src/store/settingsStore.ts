@@ -1,32 +1,48 @@
 import { create } from "zustand";
-import { createJSONStorage, persist } from "zustand/middleware";
-import { tauriStorageEngine } from "./engine";
 import { StorageType } from "../types/settings";
+import { LazyStore } from "@tauri-apps/plugin-store";
 
 type SettingsStore = {
-  "storage-type": StorageType
+  storageType: StorageType
   databaseUrl: string;
 }
 
 type SettingsStoreActions = {
-  setStorageType: (type: StorageType) => void;
-  setDatabaseUrl: (url: string) => void;
+  setStorageType: (type: StorageType) => Promise<void>;
+  setDatabaseUrl: (url: string) => Promise<void>;
 }
 
 export type SettingsStoreState = SettingsStore & SettingsStoreActions;
 
-export const useSettingsStore = create<SettingsStoreState>()(
-  persist(
-    (set) => ({
-      databaseUrl: "",
-      "storage-type": StorageType.LOCAL,
+const STORE_FILE = "store.json"
+const store = new LazyStore(STORE_FILE, { autoSave: false })
 
-      setStorageType: (type: StorageType) => set({ "storage-type": type }),
-      setDatabaseUrl: (url: string) => set({ databaseUrl: url }),
-    }),
-    {
-      name: "settings-store",
-      storage: createJSONStorage(() => tauriStorageEngine),
-    }
-  )
+export const useSettingsStore = create<SettingsStoreState>()(
+  (set) => ({
+    databaseUrl: "",
+    storageType: StorageType.LOCAL,
+
+    setStorageType: async (type: StorageType) => {
+      set({ storageType: type })
+      await store.set("storageType", type)
+    },
+    setDatabaseUrl: async (url: string) => {
+      set({ databaseUrl: url })
+      await store.set("databaseUrl", url)
+    },
+  })
 )
+
+// set initial state from store
+
+store.get<string>("storageType").then((storageType) => {
+  if (storageType) {
+    useSettingsStore.setState({ storageType: storageType as StorageType })
+  }
+})
+
+store.get<string>("databaseUrl").then((databaseUrl) => {
+  if (databaseUrl) {
+    useSettingsStore.setState({ databaseUrl })
+  }
+})

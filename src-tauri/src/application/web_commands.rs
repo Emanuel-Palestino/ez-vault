@@ -2,6 +2,7 @@ use super::app::VaultApp;
 use crate::{interfaces::IStorage, types::*};
 use std::sync::Mutex;
 use tauri::async_runtime::Mutex as AsyncMutex;
+use tauri_plugin_store::StoreExt;
 
 #[tauri::command]
 pub fn command_check(state: tauri::State<Mutex<VaultApp>>) {
@@ -114,4 +115,25 @@ pub async fn command_get_secrets_by_app_id(
     let vault_state = state.lock().await;
     let secrets = vault_state.storage.get_secrets_by_app_id(app_id).await;
     Ok(secrets.into())
+}
+
+#[tauri::command]
+pub async fn command_update_storage_type(
+    app_handle: tauri::AppHandle,
+    state: tauri::State<'_, AsyncMutex<VaultApp>>,
+    storage_type: String,
+    url: Option<String>,
+    token: Option<String>,
+) -> Result<(), ()> {
+    let mut vault_state = state.lock().await;
+    let s_type = StorageType::from_str(storage_type.as_str());
+    let store = app_handle.store("store.json").unwrap();
+    if s_type != StorageType::LOCAL {
+        store.set("databaseToken", token.clone());
+    } else {
+        store.delete("databaseToken");
+    }
+
+    vault_state.update_storage_type(s_type, url, token).await;
+    Ok(())
 }

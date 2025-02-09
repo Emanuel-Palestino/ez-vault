@@ -26,6 +26,7 @@ pub fn run() {
             web_commands::command_get_credentials_by_app_id,
             web_commands::command_create_secret,
             web_commands::command_get_secrets_by_app_id,
+            web_commands::command_update_storage_type,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

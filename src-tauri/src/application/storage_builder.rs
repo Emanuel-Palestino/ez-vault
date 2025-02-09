@@ -1,4 +1,4 @@
-use std::error;
+use std::{error, time::Duration};
 
 use libsql::Builder;
 
@@ -87,6 +87,7 @@ impl StorageBuilder {
         let token = self.database_token.ok_or("Database token not set")?;
 
         let db = Builder::new_remote_replica(self.database_name, url, token)
+            .sync_interval(Duration::from_secs(60 * 5))
             .build()
             .await?;
         let conn = db.connect()?;

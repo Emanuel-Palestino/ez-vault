@@ -4,7 +4,7 @@ import { createSecret, useGetApps } from '../services/storage'
 
 interface CreateSecretModalProps {
   closeModal: () => void
-  modalRef: React.RefObject<HTMLDialogElement>
+  modalRef: React.RefObject<HTMLDialogElement | null>
 }
 
 export const CreateSecretModal: FC<CreateSecretModalProps> = ({

@@ -9,7 +9,7 @@ declare module 'react' {
 
   interface HTMLAttributes<T> {
     popovertarget?: string
-    popover?: 'auto' | 'manual'
+    popover?: "" | "auto" | "manual" | "hint" | undefined
   }
 }
 
@@ -31,12 +31,12 @@ export const Toolbar: FC<ToolbarProps> = ({
   return (
     <>
       <nav className="w-full flex justify-end sticky top-2 z-50">
-        <section className="menu menu-horizontal bg-base-200 rounded-box">
-          <button className="btn">
+        <section className="menu menu-horizontal bg-base-300 rounded-box gap-2">
+          <button className="btn btn-ghost">
             Settings
           </button>
           <button
-            className="btn"
+            className="btn btn-ghost"
             popovertarget="new-menu"
             style={{ anchorName: '--anchor-new-menu' }}
           >

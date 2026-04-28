@@ -22,7 +22,7 @@ export const MainContent = () => {
           {apps.map((app) => (
             <div
               key={app.id}
-              className="card basis-xs bg-base-200 shadow-sm cursor-pointer"
+              className="card basis-xs bg-base-100 cursor-pointer shadow-md"
               onClick={() => handleOpenDetails(app)}
             >
               <div className="card-body p-6">
@@ -51,13 +51,11 @@ export const MainContent = () => {
         </div>
       </section>
 
-      {selectedApp && (
-        <AppDetails
-          appDetailsRef={modalRef}
-          closeAppDetails={close}
-          app={selectedApp}
-        />
-      )}
+      <AppDetails
+        appDetailsRef={modalRef}
+        closeAppDetails={close}
+        app={selectedApp}
+      />
     </>
   )
 }

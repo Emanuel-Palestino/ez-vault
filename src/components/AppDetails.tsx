@@ -7,10 +7,22 @@ import {
   useGetSecretsByAppId,
 } from '../services/storage'
 
+const DEFAULT_APP_DETAILS: App = {
+  id: '',
+  name: '',
+  url: '',
+  note: '',
+  bounded_context: '',
+  environments: [],
+  labels: [],
+  created_at_ts: 0,
+  updated_at_ts: 0,
+}
+
 interface AppDetailsProps {
-  appDetailsRef: React.RefObject<HTMLDialogElement>
+  appDetailsRef: React.RefObject<HTMLDialogElement | null>
   closeAppDetails: () => void
-  app: App
+  app: App | null
 }
 
 export const AppDetails: FC<AppDetailsProps> = ({
@@ -18,13 +30,16 @@ export const AppDetails: FC<AppDetailsProps> = ({
   closeAppDetails,
   app,
 }) => {
-  const { ports } = useGetPortsByAppId(app.id)
-  const { credentials } = useGetCredentialsByAppId(app.id)
-  const { secrets } = useGetSecretsByAppId(app.id)
+
+  const appData = app || DEFAULT_APP_DETAILS
+
+  const { ports } = useGetPortsByAppId(appData.id)
+  const { credentials } = useGetCredentialsByAppId(appData.id)
+  const { secrets } = useGetSecretsByAppId(appData.id)
 
   return (
-    <Modal ref={appDetailsRef} defaultOpen={true} size="lg">
-      <h2>{app.name}</h2>
+    <Modal ref={appDetailsRef} size="lg">
+      <h2>{appData.name}</h2>
 
       <section className="overflow-y-auto mt-5">
         <div className="flex gap-4 items-center">
@@ -34,18 +49,18 @@ export const AppDetails: FC<AppDetailsProps> = ({
         <dl className="grid grid-cols-3 gap-x-4 gap-y-2 mt-2 mb-6">
           <div>
             <dt className="text-sm text-gray-400">Note</dt>
-            <dd className="ml-2 mb-2">{app.note}</dd>
+            <dd className="ml-2 mb-2">{appData.note}</dd>
           </div>
 
           <div>
             <dt className="text-sm text-gray-400">Link</dt>
-            <dd className="ml-2 mb-2">{app.url}</dd>
+            <dd className="ml-2 mb-2">{appData.url}</dd>
           </div>
 
           <div>
             <dt className="text-sm text-gray-400">Environments</dt>
             <dd className="ml-2 mb-2">
-              {app.environments.map((env) => (
+              {appData.environments.map((env) => (
                 <span key={env.id} className="badge badge-primary">
                   {env.name}
                 </span>
@@ -56,7 +71,7 @@ export const AppDetails: FC<AppDetailsProps> = ({
           <div>
             <dt className="text-sm text-gray-400">Labels</dt>
             <dd className="ml-2 mb-2">
-              {app.labels.map((label) => (
+              {appData.labels.map((label) => (
                 <span key={label} className="badge badge-accent">
                   {label}
                 </span>
@@ -67,9 +82,9 @@ export const AppDetails: FC<AppDetailsProps> = ({
           <div>
             <dt className="text-sm text-gray-400">Bounded Context</dt>
             <dd className="ml-2 mb-2">
-              {app.bounded_context && (
+              {appData.bounded_context && (
                 <span className="badge badge-accent">
-                  {app.bounded_context}
+                  {appData.bounded_context}
                 </span>
               )}
             </dd>

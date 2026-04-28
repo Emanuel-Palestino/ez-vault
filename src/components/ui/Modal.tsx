@@ -1,28 +1,25 @@
-import { forwardRef, useRef, useState } from 'react'
+import { forwardRef, useRef } from 'react'
 
 interface ModalProps {
   children: React.ReactNode
-  defaultOpen?: boolean
   size?: 'lg'
 }
 
 export const Modal = forwardRef<HTMLDialogElement, ModalProps>(
-  ({ children, defaultOpen = false, size }, ref) => {
-    const [isOpen, setIsOpen] = useState(defaultOpen)
+  ({ children, size }, ref) => {
 
     return (
-      <dialog ref={ref} className={`modal ${isOpen ? 'modal-open' : ''}`}>
+      <dialog ref={ref} className="modal">
         <div
-          className={`modal-box flex flex-col ${size === 'lg' && 'max-w-[55rem]'}`}
+          className={`modal-box flex flex-col ${size === 'lg' && 'max-w-220'}`}
         >
           {children}
         </div>
         <form
           method="dialog"
-          onSubmit={() => setIsOpen(false)}
           className="modal-backdrop"
         >
-          <button>close</button>
+          <button type="submit">close</button>
         </form>
       </dialog>
     )

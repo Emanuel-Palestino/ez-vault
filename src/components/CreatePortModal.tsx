@@ -4,7 +4,7 @@ import { createPort, useGetApps } from '../services/storage'
 
 interface CreatePortModalProps {
   closeModal: () => void
-  modalRef: React.RefObject<HTMLDialogElement>
+  modalRef: React.RefObject<HTMLDialogElement | null>
 }
 
 export const CreatePortModal: FC<CreatePortModalProps> = ({

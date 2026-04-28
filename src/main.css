@@ -1,53 +1,44 @@
 @import 'tailwindcss';
+@plugin "daisyui";
 
-@plugin "daisyui" {
-  themes:
-    light --default,
-    dark --prefersdark;
-}
-
-@plugin "daisyui/theme" {
-  name: 'light';
-  default: true;
-  --depth: 0;
-  --radius-selector: 1rem;
-  --radius-field: 0.5rem;
-  --radius-box: 1rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.21875rem;
-}
-
-@plugin "daisyui/theme" {
-  name: 'dark';
-  default: false;
-  prefersdark: true;
-  color-scheme: 'dark';
-  --depth: 0;
-  --radius-selector: 1rem;
-  --radius-field: 0.5rem;
-  --radius-box: 1rem;
-  --size-selector: 0.25rem;
-  --size-field: 0.21875rem;
-}
-
-.fieldset-legend {
+/* @utility fieldset-legend {
   @apply py-1 pb-0.5;
 }
 
-.input,
-.textarea,
-.select {
-  @apply w-full;
+@utility btn {
+  @apply rounded-xl;
 }
 
-h2 {
-  @apply text-2xl font-bold;
+@utility badge {
+  @apply rounded-xl;
 }
 
-h3 {
-  @apply text-xl font-bold;
+@utility input {
+  @apply rounded-lg;
 }
 
-.modal-box {
-  @apply max-h-[calc(11/12*100%)];
+@utility select {
+  @apply rounded-lg;
 }
+
+@utility textarea {
+  @apply rounded-lg;
+}
+
+@utility card {
+  @apply rounded-xl shadow-md;
+}
+
+@utility modal-box {
+  @apply rounded-xl;
+}
+
+@layer components {
+  h2 {
+    @apply text-2xl font-bold;
+  }
+
+  h3 {
+    @apply text-xl font-bold;
+  }
+} */

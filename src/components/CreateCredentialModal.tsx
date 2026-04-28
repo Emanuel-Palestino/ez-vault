@@ -4,7 +4,7 @@ import { createCredential, useGetApps } from '../services/storage'
 
 interface CreateCredentialModalProps {
   closeModal: () => void
-  modalRef: React.RefObject<HTMLDialogElement>
+  modalRef: React.RefObject<HTMLDialogElement | null>
 }
 
 export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({

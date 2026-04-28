@@ -4,7 +4,7 @@ import { createEnvironment } from '../services/storage'
 
 interface CreateEnvModalProps {
   closeModal: () => void
-  modalRef: React.RefObject<HTMLDialogElement>
+  modalRef: React.RefObject<HTMLDialogElement | null>
 }
 
 export const CreateEnvModal: FC<CreateEnvModalProps> = ({

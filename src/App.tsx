@@ -39,7 +39,7 @@ export function App() {
   } = useModal()
 
   return (
-    <main className="w-full p-2">
+    <main className="w-full h-dvh p-2 bg-base-200">
       <Toolbar
         openCreateApp={openCreateAppModal}
         openCreateEnv={openCreateEnvModal}

@@ -3,7 +3,7 @@ import { Modal } from './ui/Modal'
 import { App } from '../types/entities'
 import {
   useGetCredentialsByAppId,
-  useGetPortsByAppId,
+  useGetEnvironments,
   useGetSecretsByAppId,
 } from '../services/storage'
 
@@ -12,11 +12,11 @@ const DEFAULT_APP_DETAILS: App = {
   name: '',
   url: '',
   note: '',
-  bounded_context: '',
-  environments: [],
+  environmentId: '',
   labels: [],
-  created_at_ts: 0,
-  updated_at_ts: 0,
+  createdAtTs: 0,
+  updatedAtTs: 0,
+  deleted: false,
 }
 
 interface AppDetailsProps {
@@ -33,9 +33,10 @@ export const AppDetails: FC<AppDetailsProps> = ({
 
   const appData = app || DEFAULT_APP_DETAILS
 
-  const { ports } = useGetPortsByAppId(appData.id)
   const { credentials } = useGetCredentialsByAppId(appData.id)
   const { secrets } = useGetSecretsByAppId(appData.id)
+  const { environments } = useGetEnvironments()
+  const environment = environments.find((env) => env.id === appData.environmentId)
 
   return (
     <Modal ref={appDetailsRef} size="lg">
@@ -47,10 +48,7 @@ export const AppDetails: FC<AppDetailsProps> = ({
           <button className="btn btn-ghost btn-sm">edit</button>
         </div>
         <dl className="grid grid-cols-3 gap-x-4 gap-y-2 mt-2 mb-6">
-          <div>
-            <dt className="text-sm text-gray-400">Note</dt>
-            <dd className="ml-2 mb-2">{appData.note}</dd>
-          </div>
+
 
           <div>
             <dt className="text-sm text-gray-400">Link</dt>
@@ -58,13 +56,13 @@ export const AppDetails: FC<AppDetailsProps> = ({
           </div>
 
           <div>
-            <dt className="text-sm text-gray-400">Environments</dt>
+            <dt className="text-sm text-gray-400">Environment</dt>
             <dd className="ml-2 mb-2">
-              {appData.environments.map((env) => (
-                <span key={env.id} className="badge badge-primary">
-                  {env.name}
+              {environment ? (
+                <span className="badge badge-primary">
+                  {environment.name}
                 </span>
-              ))}
+              ) : null}
             </dd>
           </div>
 
@@ -80,28 +78,10 @@ export const AppDetails: FC<AppDetailsProps> = ({
           </div>
 
           <div>
-            <dt className="text-sm text-gray-400">Bounded Context</dt>
-            <dd className="ml-2 mb-2">
-              {appData.bounded_context && (
-                <span className="badge badge-accent">
-                  {appData.bounded_context}
-                </span>
-              )}
-            </dd>
+            <dt className="text-sm text-gray-400">Note</dt>
+            <dd className="ml-2 mb-2">{appData.note}</dd>
           </div>
         </dl>
-
-        <div className="flex gap-4 items-center">
-          <h3>Ports</h3>
-          <button className="btn btn-ghost btn-sm">edit</button>
-        </div>
-        <div className="mt-2 mb-6">
-          {ports.map((port) => (
-            <span key={port.id} className="badge badge-primary">
-              {port.value}
-            </span>
-          ))}
-        </div>
 
         <div className="flex gap-4 items-center">
           <h3>Credentials</h3>
@@ -111,13 +91,23 @@ export const AppDetails: FC<AppDetailsProps> = ({
           {credentials.map((credential) => (
             <div className="grid grid-cols-4 mt-2" key={credential.id}>
               <div>
+                <dt className="text-sm text-gray-400">Context</dt>
+                <dd className="ml-2 mb-2">{credential.context}</dd>
+              </div>
+
+              <div>
+                <dt className="text-sm text-gray-400">Url</dt>
+                <dd className="ml-2 mb-2">{credential.url}</dd>
+              </div>
+
+              <div>
                 <dt className="text-sm text-gray-400">Username</dt>
                 <dd className="ml-2 mb-2">{credential.username}</dd>
               </div>
 
               <div>
                 <dt className="text-sm text-gray-400">Password</dt>
-                <dd className="ml-2 mb-2">{credential.password}</dd>
+                <dd className="ml-2 mb-2">{credential.password || 'n/a'}</dd>
               </div>
 
               <div className="col-span-2">

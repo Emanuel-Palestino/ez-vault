@@ -1,66 +1,64 @@
 // IMPORTANT NOTE: If changes are made to this file, you must to sync the changes with the rust types module
 
 export type BaseType = {
-  created_at_ts: number
-  updated_at_ts: number
+  id: string
+  createdAtTs: number
+  updatedAtTs: number
   note: string
+  deleted: boolean
 }
-
-export type NewEnvironment = Omit<
-  Environment,
-  'id' | 'created_at_ts' | 'updated_at_ts'
->
 
 export type Environment = BaseType & {
-  id: string
   name: string
 }
-
-export type NewApp = Omit<
-  App,
-  'id' | 'created_at_ts' | 'updated_at_ts' | 'environments'
-> & { environment_ids: string[] }
+export type EnvironmentCreate = Omit<
+  Environment,
+  'id' | 'createdAtTs' | 'updatedAtTs' | 'deleted'
+>
 
 export type App = BaseType & {
-  id: string
   url: string // js URL type
-  environments: Environment[]
+  environmentId: string
   name: string
   labels: string[]
-  bounded_context: string
 }
-
-export type NewPort = Omit<
-  Port,
-  'id' | 'created_at_ts' | 'updated_at_ts' | 'app'
-> & { app_id: string }
-
-export type Port = BaseType & {
-  id: string
-  app: App
-  value: number
-}
-
-export type NewCredential = Omit<
-  Credential,
-  'id' | 'created_at_ts' | 'updated_at_ts' | 'app'
-> & { app_id: string }
+export type AppCreate = Omit<
+  App,
+  'id' | 'createdAtTs' | 'updatedAtTs' | 'deleted'
+>
 
 export type Credential = BaseType & {
-  id: string
-  app: App
+  appId: string
+  context: string
   username: string
-  password: string
+  password: string | null // password can be null if the app doesn't require a password, e.g. API key, mfa app
+  url: string | null
 }
-
-export type NewSecret = Omit<
-  Secret,
-  'id' | 'created_at_ts' | 'updated_at_ts' | 'app'
-> & { app_id: string }
+export type CredentialCreate = Omit<
+  Credential,
+  'id' | 'createdAtTs' | 'updatedAtTs' | 'deleted'
+>
 
 export type Secret = BaseType & {
-  id: string
-  app: App
+  appId: string
   key: string
   value: string
 }
+
+export type SecretCreate = Omit<
+  Secret,
+  'id' | 'createdAtTs' | 'updatedAtTs' | 'deleted'
+>
+
+export type Certificate = BaseType & {
+  name: string
+  fileName: string
+  fileExtension: string
+  value: string
+  environmentId: string
+  labels: string[]
+}
+export type CertificateCreate = Omit<
+  Certificate,
+  'id' | 'createdAtTs' | 'updatedAtTs' | 'deleted'
+>

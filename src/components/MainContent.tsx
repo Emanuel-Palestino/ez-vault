@@ -2,13 +2,14 @@ import { useState } from 'react'
 import { App } from '../types/entities'
 import { useModal } from './ui/Modal'
 import { AppDetails } from './AppDetails'
-import { useGetApps } from '../services/storage'
+import { useGetApps, useGetEnvironments } from '../services/storage'
 
 export const MainContent = () => {
   const { modalRef, open, close } = useModal()
   const [selectedApp, setSelectedApp] = useState<App | null>(null)
 
   const { apps } = useGetApps()
+  const { environments } = useGetEnvironments()
 
   const handleOpenDetails = (app: App) => {
     setSelectedApp(app)
@@ -19,35 +20,33 @@ export const MainContent = () => {
     <>
       <section className="container mx-auto mt-6">
         <div className="flex flex-wrap gap-4 justify-center">
-          {apps.map((app) => (
-            <div
-              key={app.id}
-              className="card basis-xs bg-base-100 cursor-pointer shadow-md"
-              onClick={() => handleOpenDetails(app)}
-            >
-              <div className="card-body p-6">
-                <div className="flex gap-2">
-                  {app.environments.map((env) => (
-                    <span key={env.id} className="badge badge-xs badge-primary">
-                      {env.name}
-                    </span>
-                  ))}
-                  {app.labels.map((label) => (
-                    <span key={label} className="badge badge-xs badge-accent">
-                      {label}
-                    </span>
-                  ))}
-                  {app.bounded_context && (
-                    <span className="badge badge-xs badge-accent">
-                      {app.bounded_context}
-                    </span>
-                  )}
+          {apps.map((app) => {
+            const environment = environments.find((env) => env.id === app.environmentId)
+            return (
+              <div
+                key={app.id}
+                className="card basis-xs bg-base-100 cursor-pointer shadow-md"
+                onClick={() => handleOpenDetails(app)}
+              >
+                <div className="card-body p-6">
+                  <div className="flex gap-2">
+                    {environment ? (
+                      <span className="badge badge-xs badge-primary">
+                        {environment.name}
+                      </span>
+                    ) : null}
+                    {app.labels.map((label) => (
+                      <span key={label} className="badge badge-xs badge-accent">
+                        {label}
+                      </span>
+                    ))}
+                  </div>
+                  <h2>{app.name}</h2>
+                  <p>{app.note}</p>
                 </div>
-                <h2>{app.name}</h2>
-                <p>{app.note}</p>
               </div>
-            </div>
-          ))}
+            )
+          })}
         </div>
       </section>
 

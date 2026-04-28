@@ -16,7 +16,7 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
   const [extraOptions, setExtraOptions] = useState<boolean>(false)
   const { environments } = useGetEnvironments()
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const formData = new FormData(formRef.current!)
@@ -25,10 +25,7 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
       name: formData.get('app_name') as string,
       url: formData.get('app_url') as string,
       note: formData.get('app_note') as string,
-      bounded_context: formData.get('app_bounded_context') as string,
-      environment_ids: [
-        (formData.get('app_environments') as string) || environments[0].id,
-      ],
+      environmentId: (formData.get('app_environment') as string) || environments[0].id,
       labels: formData.get('labels') ? [formData.get('labels') as string] : [],
     })
 
@@ -43,7 +40,7 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
       <form
         ref={formRef}
         id="create-app-form"
-        className="mt-5 overflow-y-auto"
+        className="mt-5"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">
@@ -103,11 +100,11 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
             </fieldset>
 
             <fieldset className="fieldset">
-              <legend className="fieldset-legend">Environments</legend>
+              <legend className="fieldset-legend">Environment</legend>
               <select
                 defaultValue="Select an environment"
                 className="select"
-                name="app_environments"
+                name="app_environment"
               >
                 <option disabled={true}>Select an environment</option>
                 {environments.map((env) => (

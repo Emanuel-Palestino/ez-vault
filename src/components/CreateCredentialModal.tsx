@@ -14,15 +14,17 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
   const { apps } = useGetApps()
   const formRef = useRef<HTMLFormElement>(null)
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const formData = new FormData(formRef.current!)
 
     await createCredential({
-      app_id: formData.get('credential_app_id') as string,
+      appId: formData.get('credential_app_id') as string,
+      context: formData.get('credential_context') as string,
+      url: (formData.get('credential_url') as string) || null,
       username: formData.get('credential_username') as string,
-      password: formData.get('credential_password') as string,
+      password: (formData.get('credential_password') as string) || null,
       note: formData.get('credential_note') as string,
     })
 
@@ -37,7 +39,7 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
       <form
         ref={formRef}
         id="create-credential-form"
-        className="mt-5 overflow-y-auto"
+        className="mt-5"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">
@@ -58,6 +60,29 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
         </fieldset>
 
         <fieldset className="fieldset">
+          <legend className="fieldset-legend">Context *</legend>
+          <input
+            type="text"
+            className="input"
+            name="credential_context"
+            placeholder="E.g. 'Database', 'GitHub account', etc."
+            autoComplete="off"
+            required
+          />
+        </fieldset>
+
+        <fieldset className="fieldset">
+          <legend className="fieldset-legend">URL</legend>
+          <input
+            type="text"
+            className="input"
+            name="credential_url"
+            placeholder="E.g. https://github.com, or mongodb://localhost:27017/admin"
+            autoComplete="off"
+          />
+        </fieldset>
+
+        <fieldset className="fieldset">
           <legend className="fieldset-legend">Username *</legend>
           <input
             type="text"
@@ -70,13 +95,12 @@ export const CreateCredentialModal: FC<CreateCredentialModalProps> = ({
         </fieldset>
 
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Password *</legend>
+          <legend className="fieldset-legend">Password</legend>
           <input
             type="text"
             className="input validator"
             name="credential_password"
             placeholder="Password"
-            required
             autoComplete="off"
           />
         </fieldset>

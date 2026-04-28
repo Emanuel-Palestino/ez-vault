@@ -13,7 +13,7 @@ export const CreateEnvModal: FC<CreateEnvModalProps> = ({
 }) => {
   const formRef = useRef<HTMLFormElement>(null)
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const formData = new FormData(formRef.current!)
@@ -34,7 +34,7 @@ export const CreateEnvModal: FC<CreateEnvModalProps> = ({
       <form
         ref={formRef}
         id="create-env-form"
-        className="mt-5 overflow-y-auto"
+        className="mt-5"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">

@@ -14,13 +14,13 @@ export const CreateSecretModal: FC<CreateSecretModalProps> = ({
   const { apps } = useGetApps()
   const formRef = useRef<HTMLFormElement>(null)
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
 
     const formData = new FormData(formRef.current!)
 
     await createSecret({
-      app_id: formData.get('secret_app_id') as string,
+      appId: formData.get('secret_app_id') as string,
       key: formData.get('secret_key') as string,
       value: formData.get('secret_value') as string,
       note: formData.get('secret_note') as string,
@@ -37,7 +37,7 @@ export const CreateSecretModal: FC<CreateSecretModalProps> = ({
       <form
         ref={formRef}
         id="create-secret-form"
-        className="mt-5 overflow-y-auto"
+        className="mt-5"
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">

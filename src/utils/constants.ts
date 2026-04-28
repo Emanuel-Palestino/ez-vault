@@ -16,11 +16,13 @@ export const TAURI_CMD = {
   GET_PORTS_BY_APP_ID: 'command_get_ports_by_app_id',
   GET_CREDENTIALS_BY_APP_ID: 'command_get_credentials_by_app_id',
   GET_SECRETS_BY_APP_ID: 'command_get_secrets_by_app_id',
+  GET_CERTIFICATES_BY_ENVIRONMENT_ID: 'command_get_certificates_by_environment_id',
   CREATE_ENVIRONMENT: 'command_create_environment',
   CREATE_APP: 'command_create_app',
   CREATE_PORT: 'command_create_port',
   CREATE_CREDENTIAL: 'command_create_credential',
   CREATE_SECRET: 'command_create_secret',
+  CREATE_CERTIFICATE: 'command_create_certificate',
 } as const
 // Create a type with the values of the object keys
 export type TAURI_CMD = (typeof TAURI_CMD)[keyof typeof TAURI_CMD]

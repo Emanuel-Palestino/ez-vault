@@ -4,7 +4,7 @@ import { useModal } from './components/ui/Modal'
 import { CreateEnvModal } from './components/CreateEnvModal'
 import { CreateCredentialModal } from './components/CreateCredentialModal'
 import { CreateSecretModal } from './components/CreateSecretModal'
-import { CreatePortModal } from './components/CreatePortModal'
+import { CreateCertificateModal } from './components/CreateCertificateModal'
 import { MainContent } from './components/MainContent'
 
 export function App() {
@@ -33,9 +33,9 @@ export function App() {
   } = useModal()
 
   const {
-    modalRef: createPortModalRef,
-    open: openCreatePortModal,
-    close: closeCreatePortModal,
+    modalRef: createCertificateModalRef,
+    open: openCreateCertificateModal,
+    close: closeCreateCertificateModal,
   } = useModal()
 
   return (
@@ -45,7 +45,7 @@ export function App() {
         openCreateEnv={openCreateEnvModal}
         openCreateCredential={openCreateCredentialModal}
         openCreateSecret={openCreateSecretModal}
-        openCreatePort={openCreatePortModal}
+        openCreateCertificate={openCreateCertificateModal}
       />
 
       <MainContent />
@@ -70,9 +70,9 @@ export function App() {
         modalRef={createSecretModalRef}
       />
 
-      <CreatePortModal
-        closeModal={closeCreatePortModal}
-        modalRef={createPortModalRef}
+      <CreateCertificateModal
+        closeModal={closeCreateCertificateModal}
+        modalRef={createCertificateModalRef}
       />
     </main>
   )

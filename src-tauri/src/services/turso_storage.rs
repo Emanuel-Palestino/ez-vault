@@ -2,7 +2,7 @@ use crate::interfaces::IStorage;
 use crate::types::*;
 
 pub struct TursoStorage {
-    pub conn: libsql::Connection,
+    pub conn: turso::Connection,
 }
 
 impl TursoStorage {

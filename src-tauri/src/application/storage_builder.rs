@@ -1,6 +1,6 @@
 use std::error;
 
-use libsql::Builder;
+use turso::Builder;
 
 use crate::{interfaces::IStorage, services::{InMemoryStorage, TursoStorage}, types::EnvironmentCreate};
 
@@ -53,7 +53,7 @@ impl StorageBuilder {
     pub async fn build_turso_storage(self) -> Result<TursoStorage, Box<dyn error::Error>> {
         let url = self.database_url.ok_or("Database URL not set")?;
 
-        let db = Builder::new_local(url).build().await?;
+        let db = Builder::new_local(&url).build().await?;
         let conn = db.connect()?;
 
         Ok(TursoStorage {

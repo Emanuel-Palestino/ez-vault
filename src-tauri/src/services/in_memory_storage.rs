@@ -7,9 +7,9 @@ use uuid::Uuid;
 pub struct InMemoryStorage {
     pub environments: Vec<Environment>,
     pub apps: Vec<App>,
-    pub ports: Vec<Port>,
     pub credentials: Vec<Credential>,
     pub secrets: Vec<Secret>,
+    pub certificates: Vec<Certificate>,
 }
 
 impl IStorage for InMemoryStorage {
@@ -18,14 +18,15 @@ impl IStorage for InMemoryStorage {
         Ok(())
     }
 
-    async fn store_environment(&mut self, environment: NewEnvironment) {
+    async fn store_environment(&mut self, environment: EnvironmentCreate) {
         let now = Utc::now().timestamp();
         self.environments.push(Environment {
             id: Uuid::new_v4().to_string(),
-            name: environment.name,
-            note: environment.note,
             created_at_ts: now,
             updated_at_ts: now,
+            name: environment.name,
+            note: environment.note,
+            deleted: false,
         });
     }
 
@@ -33,28 +34,18 @@ impl IStorage for InMemoryStorage {
         self.environments.clone()
     }
 
-    async fn store_app(&mut self, app: NewApp) {
+    async fn store_app(&mut self, app: AppCreate) {
         let now = Utc::now().timestamp();
         self.apps.push(App {
             id: Uuid::new_v4().to_string(),
-            name: app.name,
-            url: app.url,
-            note: app.note,
-            environments: app
-                .environment_ids
-                .iter()
-                .map(|env_id| {
-                    self.environments
-                        .iter()
-                        .find(|env| env.id == *env_id)
-                        .unwrap()
-                        .clone()
-                })
-                .collect(),
-            labels: app.labels,
-            bounded_context: app.bounded_context,
             created_at_ts: now,
             updated_at_ts: now,
+            name: app.name,
+            url: app.url,
+            environment_id: app.environment_id,
+            labels: app.labels,
+            note: app.note,
+            deleted: false,
         });
     }
 
@@ -62,83 +53,76 @@ impl IStorage for InMemoryStorage {
         self.apps.clone()
     }
 
-    async fn store_port(&mut self, port: NewPort) {
-        let now = Utc::now().timestamp();
-        self.ports.push(Port {
-            id: Uuid::new_v4().to_string(),
-            app: self
-                .apps
-                .iter()
-                .find(|app| app.id == port.app_id)
-                .unwrap()
-                .clone(),
-            value: port.value,
-            note: port.note,
-            created_at_ts: now,
-            updated_at_ts: now,
-        });
-    }
-
-    async fn get_ports(&self) -> Vec<Port> {
-        self.ports.clone()
-    }
-
-    async fn get_ports_by_app_id(&self, app_id: String) -> Vec<Port> {
-        self.ports
-            .iter()
-            .filter(|port| port.app.id == app_id)
-            .cloned()
-            .collect()
-    }
-
-    async fn store_credential(&mut self, credential: NewCredential) {
+    async fn store_credential(&mut self, credential: CredentialCreate) {
         let now = Utc::now().timestamp();
         self.credentials.push(Credential {
             id: Uuid::new_v4().to_string(),
-            app: self
-                .apps
-                .iter()
-                .find(|app| app.id == credential.app_id)
-                .unwrap()
-                .clone(),
-            username: credential.username,
-            password: credential.password,
-            note: credential.note,
             created_at_ts: now,
             updated_at_ts: now,
+            app_id: credential.app_id,
+            context: credential.context,
+            username: credential.username,
+            password: credential.password,
+            url: credential.url,
+            note: credential.note,
+            deleted: false,
         });
     }
 
     async fn get_credentials_by_app_id(&self, app_id: String) -> Vec<Credential> {
         self.credentials
             .iter()
-            .filter(|credential| credential.app.id == app_id)
+            .filter(|credential| credential.app_id == app_id)
             .cloned()
             .collect()
     }
 
-    async fn store_secret(&mut self, secret: NewSecret) {
+    async fn store_secret(&mut self, secret: SecretCreate) {
         let now = Utc::now().timestamp();
         self.secrets.push(Secret {
             id: Uuid::new_v4().to_string(),
-            app: self
-                .apps
-                .iter()
-                .find(|app| app.id == secret.app_id)
-                .unwrap()
-                .clone(),
+            created_at_ts: now,
+            updated_at_ts: now,
+            app_id: secret.app_id,
             key: secret.key,
             value: secret.value,
             note: secret.note,
-            created_at_ts: now,
-            updated_at_ts: now,
+            deleted: false,
         });
     }
 
     async fn get_secrets_by_app_id(&self, app_id: String) -> Vec<Secret> {
         self.secrets
             .iter()
-            .filter(|secret| secret.app.id == app_id)
+            .filter(|secret| secret.app_id == app_id)
+            .cloned()
+            .collect()
+    }
+
+    async fn store_certificate(&mut self, certificate: CertificateCreate) {
+        let now = Utc::now().timestamp();
+        self.certificates.push(Certificate {
+            id: Uuid::new_v4().to_string(),
+            created_at_ts: now,
+            updated_at_ts: now,
+            name: certificate.name,
+            file_name: certificate.file_name,
+            file_extension: certificate.file_extension,
+            value: certificate.value,
+            environment_id: certificate.environment_id,
+            labels: certificate.labels,
+            note: certificate.note,
+            deleted: false,
+        });
+    }
+
+    async fn get_certificates_by_environment_id(
+        &self,
+        environment_id: String,
+    ) -> Vec<Certificate> {
+        self.certificates
+            .iter()
+            .filter(|certificate| certificate.environment_id == environment_id)
             .cloned()
             .collect()
     }

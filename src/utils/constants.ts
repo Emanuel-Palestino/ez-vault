@@ -12,14 +12,12 @@ export const FETCHER = <Data>(args: FetcherArgs) =>
 export const TAURI_CMD = {
   GET_ENVIRONMENTS: 'command_get_environments',
   GET_APPS: 'command_get_apps',
-  GET_PORTS: 'command_get_ports',
-  GET_PORTS_BY_APP_ID: 'command_get_ports_by_app_id',
   GET_CREDENTIALS_BY_APP_ID: 'command_get_credentials_by_app_id',
   GET_SECRETS_BY_APP_ID: 'command_get_secrets_by_app_id',
-  GET_CERTIFICATES_BY_ENVIRONMENT_ID: 'command_get_certificates_by_environment_id',
+  GET_CERTIFICATES_BY_ENVIRONMENT_ID:
+    'command_get_certificates_by_environment_id',
   CREATE_ENVIRONMENT: 'command_create_environment',
   CREATE_APP: 'command_create_app',
-  CREATE_PORT: 'command_create_port',
   CREATE_CREDENTIAL: 'command_create_credential',
   CREATE_SECRET: 'command_create_secret',
   CREATE_CERTIFICATE: 'command_create_certificate',

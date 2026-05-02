@@ -62,3 +62,13 @@ export type CertificateCreate = Omit<
   Certificate,
   'id' | 'createdAtTs' | 'updatedAtTs' | 'deleted'
 >
+
+export type SetupStatus = {
+  needsSetup: boolean
+  isLocked: boolean
+}
+
+export type VaultError = {
+  kind: 'Database' | 'NotFound' | 'Internal' | 'Locked' | 'Crypto' | 'Auth'
+  message: string
+}

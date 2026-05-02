@@ -1,4 +1,5 @@
 import { FC } from 'react'
+import { useSession } from '../context/SessionContext'
 
 // Extend the react CSSProperties interface to accept popover API and CSS anchor positioning
 declare module 'react' {
@@ -28,15 +29,28 @@ export const Toolbar: FC<ToolbarProps> = ({
   openCreateSecret,
   openCreateCertificate,
 }) => {
+  const { currentUser, lock } = useSession()
+
   return (
     <>
-      <nav className="w-full flex justify-end sticky top-2 z-50">
+      <nav className="w-full flex justify-between items-center sticky top-2 z-50">
+        <section className="menu menu-horizontal bg-base-300 rounded-box gap-1 px-2 py-1">
+          {currentUser && (
+            <span className="text-sm text-base-content/60 px-2 self-center">
+              {currentUser}
+            </span>
+          )}
+        </section>
+
         <section className="menu menu-horizontal bg-base-300 rounded-box gap-2">
-          <button className="btn btn-ghost">
+          <button className="btn btn-ghost btn-sm" onClick={lock}>
+            Lock
+          </button>
+          <button className="btn btn-ghost btn-sm">
             Settings
           </button>
           <button
-            className="btn btn-ghost"
+            className="btn btn-ghost btn-sm"
             popovertarget="new-menu"
             style={{ anchorName: '--anchor-new-menu' }}
           >

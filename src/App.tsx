@@ -1,3 +1,6 @@
+import { SessionProvider, useSession } from './context/SessionContext'
+import { SetupScreen } from './screens/SetupScreen'
+import { UnlockScreen } from './screens/UnlockScreen'
 import { Toolbar } from './components/Toolbar'
 import { CreateAppModal } from './components/CreateAppModal'
 import { useModal } from './components/ui/Modal'
@@ -7,7 +10,7 @@ import { CreateSecretModal } from './components/CreateSecretModal'
 import { CreateCertificateModal } from './components/CreateCertificateModal'
 import { MainContent } from './components/MainContent'
 
-export function App() {
+function VaultApp() {
   const {
     modalRef: createAppModalRef,
     open: openCreateAppModal,
@@ -75,5 +78,30 @@ export function App() {
         modalRef={createCertificateModalRef}
       />
     </main>
+  )
+}
+
+function AppRouter() {
+  const { sessionState } = useSession()
+
+  if (sessionState === 'loading') {
+    return (
+      <div className="w-full h-dvh flex items-center justify-center bg-base-200">
+        <span className="loading loading-spinner loading-lg" />
+      </div>
+    )
+  }
+
+  if (sessionState === 'needs_setup') return <SetupScreen />
+  if (sessionState === 'locked') return <UnlockScreen />
+
+  return <VaultApp />
+}
+
+export function App() {
+  return (
+    <SessionProvider>
+      <AppRouter />
+    </SessionProvider>
   )
 }

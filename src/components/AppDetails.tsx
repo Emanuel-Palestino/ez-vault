@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useState } from 'react'
 import { Modal } from './ui/Modal'
 import { App } from '../types/entities'
 import {
@@ -17,6 +17,37 @@ const DEFAULT_APP_DETAILS: App = {
   createdAtTs: 0,
   updatedAtTs: 0,
   deleted: false,
+}
+
+function MaskedField({ value, label }: { value: string | null; label: string }) {
+  const [revealed, setRevealed] = useState(false)
+
+  if (!value) {
+    return (
+      <div>
+        <dt className="text-sm text-gray-400">{label}</dt>
+        <dd className="ml-2 mb-2 text-base-content/40">n/a</dd>
+      </div>
+    )
+  }
+
+  return (
+    <div>
+      <dt className="text-sm text-gray-400">{label}</dt>
+      <dd className="ml-2 mb-2 flex items-center gap-2">
+        <span className={revealed ? '' : 'tracking-widest select-none'}>
+          {revealed ? value : '••••••••'}
+        </span>
+        <button
+          type="button"
+          className="btn btn-ghost btn-xs"
+          onClick={() => setRevealed((v) => !v)}
+        >
+          {revealed ? 'hide' : 'show'}
+        </button>
+      </dd>
+    </div>
+  )
 }
 
 interface AppDetailsProps {
@@ -48,8 +79,6 @@ export const AppDetails: FC<AppDetailsProps> = ({
           <button className="btn btn-ghost btn-sm">edit</button>
         </div>
         <dl className="grid grid-cols-3 gap-x-4 gap-y-2 mt-2 mb-6">
-
-
           <div>
             <dt className="text-sm text-gray-400">Link</dt>
             <dd className="ml-2 mb-2">{appData.url}</dd>
@@ -105,10 +134,7 @@ export const AppDetails: FC<AppDetailsProps> = ({
                 <dd className="ml-2 mb-2">{credential.username}</dd>
               </div>
 
-              <div>
-                <dt className="text-sm text-gray-400">Password</dt>
-                <dd className="ml-2 mb-2">{credential.password || 'n/a'}</dd>
-              </div>
+              <MaskedField value={credential.password} label="Password" />
 
               <div className="col-span-2">
                 <dt className="text-sm text-gray-400">Note</dt>
@@ -128,8 +154,7 @@ export const AppDetails: FC<AppDetailsProps> = ({
               <dt className="text-sm text-gray-400">Key</dt>
               <dd className="ml-2 mb-2">{secret.key}</dd>
 
-              <dt className="text-sm text-gray-400">Value</dt>
-              <dd className="ml-2 mb-2">{secret.value}</dd>
+              <MaskedField value={secret.value} label="Value" />
 
               <dt className="text-sm text-gray-400">Note</dt>
               <dd className="ml-2 mb-2">{secret.note}</dd>

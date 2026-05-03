@@ -6,6 +6,7 @@ import {
   CredentialCreate,
   Credential,
   EnvironmentCreate,
+  SaveConfigInput,
   SecretCreate,
   Secret,
   CertificateCreate,
@@ -13,6 +14,14 @@ import {
 } from '../types/entities'
 import useSWR, { mutate } from 'swr'
 import { FETCHER, FetcherArgs, TAURI_CMD } from '../utils/constants'
+
+// region Configuration
+export const isConfigured = (): Promise<boolean> =>
+  invoke<boolean>(TAURI_CMD.IS_CONFIGURED)
+
+export const saveConfiguration = (config: SaveConfigInput): Promise<void> =>
+  invoke(TAURI_CMD.SAVE_CONFIGURATION, { config })
+// endregion
 
 // region Environments
 export const createEnvironment = async (environment: EnvironmentCreate) => {

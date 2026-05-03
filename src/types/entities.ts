@@ -5,7 +5,6 @@ export type BaseType = {
   createdAtTs: number
   updatedAtTs: number
   note: string
-  deleted: boolean
 }
 
 export type Environment = BaseType & {
@@ -62,3 +61,8 @@ export type CertificateCreate = Omit<
   Certificate,
   'id' | 'createdAtTs' | 'updatedAtTs' | 'deleted'
 >
+
+export type SaveConfigInput = {
+  databaseUrl: string
+  databaseToken: string
+}

@@ -29,7 +29,7 @@ export const CreateEnvModal: FC<CreateEnvModalProps> = ({
 
   return (
     <Modal ref={modalRef}>
-      <h2>Create environment</h2>
+      <h2>Create Environment</h2>
 
       <form
         ref={formRef}
@@ -38,10 +38,10 @@ export const CreateEnvModal: FC<CreateEnvModalProps> = ({
         onSubmit={handleSubmit}
       >
         <fieldset className="fieldset">
-          <legend className="fieldset-legend">Environment name *</legend>
+          <legend className="fieldset-legend">Name *</legend>
           <input
             type="text"
-            className="input validator"
+            className="input validator w-full"
             name="env_name"
             placeholder="Environment's name"
             required
@@ -52,7 +52,7 @@ export const CreateEnvModal: FC<CreateEnvModalProps> = ({
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Note</legend>
           <textarea
-            className="textarea"
+            className="textarea w-full"
             name="env_note"
             placeholder="Optional environment's note"
             autoComplete="off"

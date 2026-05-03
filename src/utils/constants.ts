@@ -21,6 +21,8 @@ export const TAURI_CMD = {
   CREATE_CREDENTIAL: 'command_create_credential',
   CREATE_SECRET: 'command_create_secret',
   CREATE_CERTIFICATE: 'command_create_certificate',
+  IS_CONFIGURED: 'command_is_configured',
+  SAVE_CONFIGURATION: 'command_save_configuration',
 } as const
 // Create a type with the values of the object keys
 export type TAURI_CMD = (typeof TAURI_CMD)[keyof typeof TAURI_CMD]

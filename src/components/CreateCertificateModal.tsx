@@ -5,11 +5,13 @@ import { createCertificate, useGetEnvironments } from '../services/storage'
 interface CreateCertificateModalProps {
   closeModal: () => void
   modalRef: React.RefObject<HTMLDialogElement | null>
+  environmentId?: string
 }
 
 export const CreateCertificateModal: FC<CreateCertificateModalProps> = ({
   closeModal,
   modalRef,
+  environmentId,
 }) => {
   const { environments } = useGetEnvironments()
   const formRef = useRef<HTMLFormElement>(null)
@@ -24,7 +26,7 @@ export const CreateCertificateModal: FC<CreateCertificateModalProps> = ({
       fileName: formData.get('certificate_file_name') as string,
       fileExtension: formData.get('certificate_file_extension') as string,
       value: formData.get('certificate_value') as string,
-      environmentId: formData.get('certificate_environment_id') as string,
+      environmentId: environmentId ?? (formData.get('certificate_environment_id') as string),
       labels: formData.get('certificate_labels')
         ? [formData.get('certificate_labels') as string]
         : [],
@@ -92,22 +94,24 @@ export const CreateCertificateModal: FC<CreateCertificateModalProps> = ({
           ></textarea>
         </fieldset>
 
-        <fieldset className="fieldset">
-          <legend className="fieldset-legend">Environment *</legend>
-          <select
-            defaultValue="Select an environment"
-            className="select validator"
-            name="certificate_environment_id"
-            required
-          >
-            <option disabled={true}>Select an environment</option>
-            {environments.map((environment) => (
-              <option key={environment.id} value={environment.id}>
-                {environment.name}
-              </option>
-            ))}
-          </select>
-        </fieldset>
+        {!environmentId && (
+          <fieldset className="fieldset">
+            <legend className="fieldset-legend">Environment *</legend>
+            <select
+              defaultValue="Select an environment"
+              className="select validator"
+              name="certificate_environment_id"
+              required
+            >
+              <option disabled={true}>Select an environment</option>
+              {environments.map((environment) => (
+                <option key={environment.id} value={environment.id}>
+                  {environment.name}
+                </option>
+              ))}
+            </select>
+          </fieldset>
+        )}
 
         <fieldset className="fieldset">
           <legend className="fieldset-legend">Labels</legend>

@@ -5,11 +5,13 @@ import { createApp, useGetEnvironments } from '../services/storage'
 interface CreateAppModalProps {
   closeModal: () => void
   modalRef: React.RefObject<HTMLDialogElement | null>
+  environmentId?: string
 }
 
 export const CreateAppModal: FC<CreateAppModalProps> = ({
   closeModal,
   modalRef,
+  environmentId,
 }) => {
   const formRef = useRef<HTMLFormElement>(null)
 
@@ -25,7 +27,7 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
       name: formData.get('app_name') as string,
       url: formData.get('app_url') as string,
       note: formData.get('app_note') as string,
-      environmentId: (formData.get('app_environment') as string) || environments[0].id,
+      environmentId: environmentId ?? (formData.get('app_environment') as string) ?? environments[0]?.id,
       labels: formData.get('labels') ? [formData.get('labels') as string] : [],
     })
 
@@ -99,21 +101,23 @@ export const CreateAppModal: FC<CreateAppModalProps> = ({
               />
             </fieldset>
 
-            <fieldset className="fieldset">
-              <legend className="fieldset-legend">Environment</legend>
-              <select
-                defaultValue="Select an environment"
-                className="select"
-                name="app_environment"
-              >
-                <option disabled={true}>Select an environment</option>
-                {environments.map((env) => (
-                  <option key={env.id} value={env.id}>
-                    {env.name}
-                  </option>
-                ))}
-              </select>
-            </fieldset>
+            {!environmentId && (
+              <fieldset className="fieldset">
+                <legend className="fieldset-legend">Environment</legend>
+                <select
+                  defaultValue="Select an environment"
+                  className="select"
+                  name="app_environment"
+                >
+                  <option disabled={true}>Select an environment</option>
+                  {environments.map((env) => (
+                    <option key={env.id} value={env.id}>
+                      {env.name}
+                    </option>
+                  ))}
+                </select>
+              </fieldset>
+            )}
 
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Labels</legend>

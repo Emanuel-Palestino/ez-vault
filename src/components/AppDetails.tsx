@@ -16,7 +16,6 @@ const DEFAULT_APP_DETAILS: App = {
   labels: [],
   createdAtTs: 0,
   updatedAtTs: 0,
-  deleted: false,
 }
 
 interface AppDetailsProps {
@@ -30,13 +29,14 @@ export const AppDetails: FC<AppDetailsProps> = ({
   closeAppDetails,
   app,
 }) => {
-
   const appData = app || DEFAULT_APP_DETAILS
 
   const { credentials } = useGetCredentialsByAppId(appData.id)
   const { secrets } = useGetSecretsByAppId(appData.id)
   const { environments } = useGetEnvironments()
-  const environment = environments.find((env) => env.id === appData.environmentId)
+  const environment = environments.find(
+    (env) => env.id === appData.environmentId,
+  )
 
   return (
     <Modal ref={appDetailsRef} size="lg">
@@ -48,8 +48,6 @@ export const AppDetails: FC<AppDetailsProps> = ({
           <button className="btn btn-ghost btn-sm">edit</button>
         </div>
         <dl className="grid grid-cols-3 gap-x-4 gap-y-2 mt-2 mb-6">
-
-
           <div>
             <dt className="text-sm text-gray-400">Link</dt>
             <dd className="ml-2 mb-2">{appData.url}</dd>
@@ -59,9 +57,7 @@ export const AppDetails: FC<AppDetailsProps> = ({
             <dt className="text-sm text-gray-400">Environment</dt>
             <dd className="ml-2 mb-2">
               {environment ? (
-                <span className="badge badge-primary">
-                  {environment.name}
-                </span>
+                <span className="badge badge-primary">{environment.name}</span>
               ) : null}
             </dd>
           </div>

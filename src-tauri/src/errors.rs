@@ -6,6 +6,7 @@ pub enum VaultError {
     Database(String),
     NotFound(String),
     Internal(String),
+    NotConfigured(String),
 }
 
 impl std::fmt::Display for VaultError {
@@ -14,6 +15,7 @@ impl std::fmt::Display for VaultError {
             VaultError::Database(m) => write!(f, "Database error: {m}"),
             VaultError::NotFound(m) => write!(f, "Not found: {m}"),
             VaultError::Internal(m) => write!(f, "Internal error: {m}"),
+            VaultError::NotConfigured(m) => write!(f, "Not configured: {m}"),
         }
     }
 }

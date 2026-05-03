@@ -1,4 +1,4 @@
-use serde::Serialize;
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize)]
 pub struct Environment {
@@ -66,4 +66,10 @@ pub struct Certificate {
     pub labels: Vec<String>,
     pub note: String,
     pub deleted: bool,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct Configuration {
+    pub database_url: String,
+    pub database_token: String,
 }

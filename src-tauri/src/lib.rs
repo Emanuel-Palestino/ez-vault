@@ -13,6 +13,8 @@ pub fn run() {
         .setup(main_tauri_setup())
         .plugin(tauri_plugin_opener::init())
         .invoke_handler(tauri::generate_handler![
+            web_commands::command_is_configured,
+            web_commands::command_save_configuration,
             web_commands::command_get_version,
             web_commands::command_create_environment,
             web_commands::command_get_environments,

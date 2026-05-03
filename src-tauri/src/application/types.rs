@@ -3,6 +3,13 @@ use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
+pub struct SaveConfigInput {
+    pub database_url: String,
+    pub database_token: String,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct EnvironmentCreate {
     pub name: String,
     pub note: String,

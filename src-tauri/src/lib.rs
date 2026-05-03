@@ -2,9 +2,6 @@ mod application;
 mod domain;
 mod errors;
 mod implementations;
-mod interfaces;
-mod services;
-mod types;
 
 pub use errors::VaultError;
 

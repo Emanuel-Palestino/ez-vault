@@ -1,5 +1,7 @@
 use super::app::VaultApp;
-use crate::{domain::entities::Environment, errors::VaultError, interfaces::IStorage, types::*};
+use crate::application::types::*;
+use crate::domain::entities::{App, Certificate, Credential, Environment, Secret};
+use crate::errors::VaultError;
 use tauri::async_runtime::Mutex;
 
 #[tauri::command]
@@ -15,7 +17,7 @@ pub async fn command_create_environment(
     state: tauri::State<'_, Mutex<VaultApp>>,
     environment: EnvironmentCreate,
 ) -> Result<(), VaultError> {
-    let mut vault_state = state.lock().await;
+    let vault_state = state.lock().await;
     vault_state.create_environment(environment).await
 }
 
@@ -32,7 +34,7 @@ pub async fn command_delete_environment(
     state: tauri::State<'_, Mutex<VaultApp>>,
     id: String,
 ) -> Result<(), VaultError> {
-    let mut vault_state = state.lock().await;
+    let vault_state = state.lock().await;
     vault_state.delete_environment(id).await
 }
 
@@ -41,8 +43,8 @@ pub async fn command_create_app(
     state: tauri::State<'_, Mutex<VaultApp>>,
     app: AppCreate,
 ) -> Result<(), VaultError> {
-    let mut vault_state = state.lock().await;
-    vault_state.storage.store_app(app).await
+    let vault_state = state.lock().await;
+    vault_state.create_app(app).await
 }
 
 #[tauri::command]
@@ -50,7 +52,7 @@ pub async fn command_get_apps(
     state: tauri::State<'_, Mutex<VaultApp>>,
 ) -> Result<Vec<App>, VaultError> {
     let vault_state = state.lock().await;
-    vault_state.storage.get_apps().await
+    vault_state.get_apps().await
 }
 
 #[tauri::command]
@@ -58,8 +60,8 @@ pub async fn command_delete_app(
     state: tauri::State<'_, Mutex<VaultApp>>,
     id: String,
 ) -> Result<(), VaultError> {
-    let mut vault_state = state.lock().await;
-    vault_state.storage.delete_app(id).await
+    let vault_state = state.lock().await;
+    vault_state.delete_app(id).await
 }
 
 #[tauri::command]
@@ -67,8 +69,8 @@ pub async fn command_create_credential(
     state: tauri::State<'_, Mutex<VaultApp>>,
     credential: CredentialCreate,
 ) -> Result<(), VaultError> {
-    let mut vault_state = state.lock().await;
-    vault_state.storage.store_credential(credential).await
+    let vault_state = state.lock().await;
+    vault_state.create_credential(credential).await
 }
 
 #[tauri::command]
@@ -77,7 +79,7 @@ pub async fn command_get_credentials_by_app_id(
     app_id: String,
 ) -> Result<Vec<Credential>, VaultError> {
     let vault_state = state.lock().await;
-    vault_state.storage.get_credentials_by_app_id(app_id).await
+    vault_state.get_credentials_by_app_id(app_id).await
 }
 
 #[tauri::command]
@@ -85,8 +87,8 @@ pub async fn command_delete_credential(
     state: tauri::State<'_, Mutex<VaultApp>>,
     id: String,
 ) -> Result<(), VaultError> {
-    let mut vault_state = state.lock().await;
-    vault_state.storage.delete_credential(id).await
+    let vault_state = state.lock().await;
+    vault_state.delete_credential(id).await
 }
 
 #[tauri::command]
@@ -94,8 +96,8 @@ pub async fn command_create_secret(
     state: tauri::State<'_, Mutex<VaultApp>>,
     secret: SecretCreate,
 ) -> Result<(), VaultError> {
-    let mut vault_state = state.lock().await;
-    vault_state.storage.store_secret(secret).await
+    let vault_state = state.lock().await;
+    vault_state.create_secret(secret).await
 }
 
 #[tauri::command]
@@ -104,7 +106,7 @@ pub async fn command_get_secrets_by_app_id(
     app_id: String,
 ) -> Result<Vec<Secret>, VaultError> {
     let vault_state = state.lock().await;
-    vault_state.storage.get_secrets_by_app_id(app_id).await
+    vault_state.get_secrets_by_app_id(app_id).await
 }
 
 #[tauri::command]
@@ -112,8 +114,8 @@ pub async fn command_delete_secret(
     state: tauri::State<'_, Mutex<VaultApp>>,
     id: String,
 ) -> Result<(), VaultError> {
-    let mut vault_state = state.lock().await;
-    vault_state.storage.delete_secret(id).await
+    let vault_state = state.lock().await;
+    vault_state.delete_secret(id).await
 }
 
 #[tauri::command]
@@ -121,8 +123,8 @@ pub async fn command_create_certificate(
     state: tauri::State<'_, Mutex<VaultApp>>,
     certificate: CertificateCreate,
 ) -> Result<(), VaultError> {
-    let mut vault_state = state.lock().await;
-    vault_state.storage.store_certificate(certificate).await
+    let vault_state = state.lock().await;
+    vault_state.create_certificate(certificate).await
 }
 
 #[tauri::command]
@@ -132,7 +134,6 @@ pub async fn command_get_certificates_by_environment_id(
 ) -> Result<Vec<Certificate>, VaultError> {
     let vault_state = state.lock().await;
     vault_state
-        .storage
         .get_certificates_by_environment_id(environment_id)
         .await
 }
@@ -142,6 +143,6 @@ pub async fn command_delete_certificate(
     state: tauri::State<'_, Mutex<VaultApp>>,
     id: String,
 ) -> Result<(), VaultError> {
-    let mut vault_state = state.lock().await;
-    vault_state.storage.delete_certificate(id).await
+    let vault_state = state.lock().await;
+    vault_state.delete_certificate(id).await
 }

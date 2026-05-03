@@ -78,18 +78,6 @@ impl EnvironmentRepository for TursoEnvironmentRepo {
         Ok(environments)
     }
 
-    async fn update_environment(&self, id: String, data: Environment) -> Result<(), VaultError> {
-        self.conn
-            .execute(
-                "UPDATE environments SET name = ?, note = ?, updated_at_ts = ? WHERE id = ?",
-                (data.name, data.note, data.updated_at_ts, id),
-            )
-            .await
-            .map_err(VaultError::from)?;
-
-        Ok(())
-    }
-
     async fn soft_delete_environment(&self, id: String) -> Result<(), VaultError> {
         self.conn
             .execute("UPDATE environments SET deleted = 1 WHERE id = ?", (id,))

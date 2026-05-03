@@ -35,11 +35,17 @@ impl TursoStorage {
         let note: String = app_row.get(4).map_err(VaultError::from)?;
         let created_at_ts: i64 = app_row.get(5).map_err(VaultError::from)?;
         let updated_at_ts: i64 = app_row.get(6).map_err(VaultError::from)?;
-        let deleted: bool = app_row.get::<i64>(7).map(|v| v != 0).map_err(VaultError::from)?;
+        let deleted: bool = app_row
+            .get::<i64>(7)
+            .map(|v| v != 0)
+            .map_err(VaultError::from)?;
 
         let mut label_rows = self
             .conn
-            .query("SELECT label FROM app_labels WHERE app_id = ?", &[id.as_str()])
+            .query(
+                "SELECT label FROM app_labels WHERE app_id = ?",
+                &[id.as_str()],
+            )
             .await
             .map_err(VaultError::from)?;
 
@@ -68,15 +74,6 @@ impl IStorage for TursoStorage {
         self.conn
             .execute_batch(
                 r#"
-                CREATE TABLE IF NOT EXISTS environments (
-                    id TEXT PRIMARY KEY,
-                    name TEXT NOT NULL,
-                    note TEXT NOT NULL DEFAULT '',
-                    created_at_ts INTEGER NOT NULL,
-                    updated_at_ts INTEGER NOT NULL,
-                    deleted INTEGER NOT NULL DEFAULT 0
-                );
-
                 CREATE TABLE IF NOT EXISTS apps (
                     id TEXT PRIMARY KEY,
                     name TEXT NOT NULL,
@@ -149,65 +146,6 @@ impl IStorage for TursoStorage {
         Ok(())
     }
 
-    async fn store_environment(&mut self, data: EnvironmentCreate) -> Result<(), VaultError> {
-        let now = chrono::Utc::now().timestamp();
-        let uuid = uuid::Uuid::new_v4().to_string();
-
-        self.conn
-            .execute(
-                "INSERT INTO environments (id, name, note, created_at_ts, updated_at_ts, deleted) VALUES (?, ?, ?, ?, ?, 0)",
-                (uuid, data.name, data.note, now, now),
-            )
-            .await
-            .map_err(VaultError::from)?;
-
-        Ok(())
-    }
-
-    async fn get_environments(&self) -> Result<Vec<Environment>, VaultError> {
-        // cols: 0=id 1=name 2=note 3=created_at_ts 4=updated_at_ts 5=deleted
-        let mut rows = self
-            .conn
-            .query(
-                "SELECT id, name, note, created_at_ts, updated_at_ts, deleted FROM environments WHERE deleted = 0",
-                (),
-            )
-            .await
-            .map_err(VaultError::from)?;
-
-        let mut environments = Vec::new();
-        while let Some(row) = rows.next().await.map_err(VaultError::from)? {
-            let id: String = row.get(0).map_err(VaultError::from)?;
-            let name: String = row.get(1).map_err(VaultError::from)?;
-            let note: String = row.get(2).map_err(VaultError::from)?;
-            let created_at_ts: i64 = row.get(3).map_err(VaultError::from)?;
-            let updated_at_ts: i64 = row.get(4).map_err(VaultError::from)?;
-
-            environments.push(Environment {
-                id,
-                created_at_ts,
-                updated_at_ts,
-                name,
-                note,
-                deleted: false,
-            });
-        }
-
-        Ok(environments)
-    }
-
-    async fn delete_environment(&mut self, id: String) -> Result<(), VaultError> {
-        let now = chrono::Utc::now().timestamp();
-        self.conn
-            .execute(
-                "UPDATE environments SET deleted = 1, updated_at_ts = ? WHERE id = ?",
-                (now, id),
-            )
-            .await
-            .map_err(VaultError::from)?;
-        Ok(())
-    }
-
     async fn store_app(&mut self, data: AppCreate) -> Result<(), VaultError> {
         let now = chrono::Utc::now().timestamp();
         let uuid = uuid::Uuid::new_v4().to_string();
@@ -277,7 +215,10 @@ impl IStorage for TursoStorage {
         Ok(())
     }
 
-    async fn get_credentials_by_app_id(&self, app_id: String) -> Result<Vec<Credential>, VaultError> {
+    async fn get_credentials_by_app_id(
+        &self,
+        app_id: String,
+    ) -> Result<Vec<Credential>, VaultError> {
         // cols: 0=id 1=app_id 2=context 3=username 4=password 5=url 6=note 7=created_at_ts 8=updated_at_ts 9=deleted
         let mut rows = self
             .conn
@@ -417,7 +358,10 @@ impl IStorage for TursoStorage {
         Ok(())
     }
 
-    async fn get_certificates_by_environment_id(&self, environment_id: String) -> Result<Vec<Certificate>, VaultError> {
+    async fn get_certificates_by_environment_id(
+        &self,
+        environment_id: String,
+    ) -> Result<Vec<Certificate>, VaultError> {
         // cols: 0=id 1=name 2=file_name 3=file_extension 4=value 5=environment_id 6=note 7=created_at_ts 8=updated_at_ts 9=deleted
         let mut rows = self
             .conn

@@ -1,9 +1,11 @@
 use super::app::VaultApp;
-use crate::{errors::VaultError, interfaces::IStorage, types::*};
+use crate::{domain::entities::Environment, errors::VaultError, interfaces::IStorage, types::*};
 use tauri::async_runtime::Mutex;
 
 #[tauri::command]
-pub async fn command_get_version(state: tauri::State<'_, Mutex<VaultApp>>) -> Result<String, VaultError> {
+pub async fn command_get_version(
+    state: tauri::State<'_, Mutex<VaultApp>>,
+) -> Result<String, VaultError> {
     let vault_state = state.lock().await;
     Ok(vault_state.version().to_string())
 }
@@ -14,7 +16,7 @@ pub async fn command_create_environment(
     environment: EnvironmentCreate,
 ) -> Result<(), VaultError> {
     let mut vault_state = state.lock().await;
-    vault_state.storage.store_environment(environment).await
+    vault_state.create_environment(environment).await
 }
 
 #[tauri::command]
@@ -22,7 +24,7 @@ pub async fn command_get_environments(
     state: tauri::State<'_, Mutex<VaultApp>>,
 ) -> Result<Vec<Environment>, VaultError> {
     let vault_state = state.lock().await;
-    vault_state.storage.get_environments().await
+    vault_state.get_environments().await
 }
 
 #[tauri::command]
@@ -31,7 +33,7 @@ pub async fn command_delete_environment(
     id: String,
 ) -> Result<(), VaultError> {
     let mut vault_state = state.lock().await;
-    vault_state.storage.delete_environment(id).await
+    vault_state.delete_environment(id).await
 }
 
 #[tauri::command]

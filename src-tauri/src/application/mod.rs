@@ -1,4 +1,3 @@
-mod storage_builder;
 pub mod web_commands;
 
 mod app;

@@ -1,17 +1,6 @@
 // IMPORTANT NOTE: If changes are made to this file you must to sync the changes with the typescript entities types
 use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Clone, Serialize)]
-#[serde(rename_all = "camelCase")]
-pub struct Environment {
-    pub id: String,
-    pub created_at_ts: i64,
-    pub updated_at_ts: i64,
-    pub name: String,
-    pub note: String,
-    pub deleted: bool,
-}
-
 #[derive(Debug, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct EnvironmentCreate {
